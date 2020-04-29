@@ -27,3 +27,9 @@ void init(double& width1, double& height1,
 
 	alpha_max = 3.14159; // max range of laser / gripper (rad)
 }
+
+void turn(int pwm_offset, int& pw_l, int& pw_r)
+{
+	pw_l = PWM_STATIONARY + pwm_offset;
+	pw_r = PWM_STATIONARY + pwm_offset;
+}

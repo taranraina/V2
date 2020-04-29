@@ -71,8 +71,7 @@ int main()
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
-	pw_l = 1750; // pulse width for left wheel servo (us)
-	pw_r = 1750; // pulse width for right wheel servo (us)
+	turn(-250, pw_l, pw_r);
 	pw_laser = 1500; // pulse width for laser servo (us)
 	laser = 0; // laser input (0 - off, 1 - fire)
 
