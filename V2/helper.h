@@ -20,3 +20,4 @@ int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[
 void robot_circle(image& img, double PI, int x, int y);
 void controller(int* mini_destinationx, int* mini_destinationy, double theta, int& pw_l, int& pw_r);
 bool are_robots_close(int x, int y, int xo, int yo);
+void convert_theta_positive(double& theta);

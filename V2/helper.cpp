@@ -405,18 +405,22 @@ void robot_circle(image& img, double PI, int x, int y)
 	}
 }
 
+void convert_theta_positive(double& theta)
+{
+	double PI = atan(1) * 4;
+
+	if (theta < 0) {
+		while (theta < 0) theta = theta + 2 * PI;
+	}
+}
+
 void controller(int* mini_destinationx, int* mini_destinationy, double theta, int& pw_l, int& pw_r)
 {
 	double PI = atan(1) * 4;
 	double theta_expected = atan2(mini_destinationy[1] - mini_destinationy[0], mini_destinationx[1] - mini_destinationx[0]);
 
-	if (theta < 0) {
-		while (theta < 0) theta = theta + 2 * PI;
-	}
-
-	if (theta_expected < 0) {
-		while (theta_expected < 0) theta_expected = theta_expected + 2* PI;
-	}
+	convert_theta_positive(theta);
+	convert_theta_positive(theta_expected);
 
 	if (abs(theta - theta_expected) > 7 * (PI / 180)) // Tolerance
 	{
@@ -525,4 +529,4 @@ bool are_robots_close(int x, int y, int xo, int yo)
 	cout << distance << endl;
 
 	return distance <= distance_threshold;
-}
+} 

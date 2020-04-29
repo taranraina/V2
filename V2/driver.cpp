@@ -184,8 +184,24 @@ int main()
 		if (!are_robots_close(x, y, xo, yo))
 			controller(mini_destinationx, mini_destinationy, theta, pw_l, pw_r);
 		else {
-			pw_l = 1500;
-			pw_r = 1500;
+			// determine the theta between robot and opponent
+			double theta_expected = atan2(yo - y, xo - x);
+
+			convert_theta_positive(theta_expected);
+			convert_theta_positive(theta);
+
+			if (abs(theta - theta_expected) > 7 * (PI / 180)) {
+				int max_turn_speed = 50;
+
+				if (theta - theta_expected < 0)
+					turn(max_turn_speed, pw_l, pw_r);
+				else
+					turn(-1 * max_turn_speed, pw_l, pw_r);
+			}
+			else {
+				pw_l = 1500;
+				pw_r = 1500;
+			}
 		}
 
 		set_inputs(pw_l, pw_r, pw_laser, laser,
