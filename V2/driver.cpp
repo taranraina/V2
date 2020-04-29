@@ -70,8 +70,8 @@ int main()
 	//	fout << scientific;
 
 	// set robot initial position (pixels) and angle (rad)
-	x0 = 300;
-	y0 = 200;
+	x0 = 500;
+	y0 = 100;
 	theta0 = PI/2;
 	set_robot_position(x0, y0, theta0);
 
@@ -163,7 +163,7 @@ int main()
 
 		potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
 			y, 0, 200, x_obs,
-			y_obs, N_obs, 5, 300);
+			y_obs, N_obs, 5, 500);
 			
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)
