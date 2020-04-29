@@ -5,7 +5,10 @@
 using namespace std;
 
 const int PWM_STATIONARY = 1500;
-void init(double& width1, double& height1, int& N_obs, double&D, double&Lx, double&Ly, double&Ax, double&Ay, double&alpha_max);
+void init(double& width1, double& height1, int& N_obs, 
+	double&D, double&Lx, double&Ly, 
+	double&Ax, double&Ay, double&alpha_max,
+	double* x_obs, double* y_obs);
 void turn(int pwm_offset,int& pw_l,int& pw_r);
 int get_labels(image rgb, image grey1, image grey2, image label, int &nlabels, int thresh);
 int greyscale_centroid(image rgb, image grey, image grey1, image label, int &ic, int &jc, short int nlabel);

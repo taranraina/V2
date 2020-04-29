@@ -39,7 +39,8 @@ int main()
 
 	init( width1,  height1,
 		 N_obs, D, Lx,
-		Ly, Ax, Ay, alpha_max);
+		 Ly, Ax, Ay, alpha_max,
+		 x_obs, y_obs);
 
 	cout << "\npress space key to begin program.";
 	pause();

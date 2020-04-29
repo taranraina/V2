@@ -2,13 +2,17 @@
 
 void init(double& width1, double& height1, 
 	int& N_obs, double&D, double&Lx, 
-	double&Ly, double&Ax, double&Ay, double&alpha_max)
+	double&Ly, double&Ax, double&Ay, 
+	double&alpha_max, double* x_obs,
+	double* y_obs)
 {
 	width1 = 640;
 	height1 = 480;
 
-	// number of obstacles (not currently implemented in the library)
-	N_obs = 0;
+	N_obs = 1;
+
+	x_obs[1] = 270; // pixels
+	y_obs[1] = 270; // pixels
 
 	// set robot model parameters ////////
 

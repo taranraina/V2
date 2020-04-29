@@ -199,6 +199,22 @@ int acquire_image_sim(image &rgb)
 	// copy background into result
 	copy(rgb_background, rgb);
 
+	ic = rgb_obstacle.width / 2;
+	jc = rgb_obstacle.height / 2;
+
+	for (int k = 1; k <= S1->N_obs; k++) {
+		// get pixel location of obstacle center
+		i = (int)S1->x_obs[k];
+		j = (int)S1->y_obs[k];
+
+		// calculate bottom left corner of image in global coord
+		i -= ic;
+		j -= jc;
+
+		// place obstacle at point (i,j)
+		append(rgb, rgb_obstacle, i, j);
+	}
+
 	// rotate robot image around image center point by theta	
 	rotate(rgb_robot, rgb_robot_r, theta);
 
