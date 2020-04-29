@@ -4,30 +4,31 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 	double* ox, double* oy, int num_obstacles, 
 	double reso, double rr, int& xw, int& yw)
 {
+	const int num_particles = 360;
 	const double PI = atan(1) * 4;
 
 	// Convert centroid to edges
-	double* edgesx = new double[num_obstacles * 360];
-	double* edgesy = new double[num_obstacles * 360];
+	double* edgesx = new double[num_obstacles * num_particles];
+	double* edgesy = new double[num_obstacles * num_particles];
 
 	for (int i = 1; i <= num_obstacles; i++) {
-		for (int j = 0; j < 360; j++) {
-			edgesx[(i - 1) * 360 + j] = ox[i] + 30 * cos(j * PI / 180.0);
-			edgesy[(i - 1) * 360 + j] = oy[i] + 30 * sin(j * PI / 180.0);
+		for (int j = 0; j < num_particles; j++) {
+			edgesx[(i - 1) * num_particles + j] = ox[i] + 30 * cos(j * PI / 180.0);
+			edgesy[(i - 1) * num_particles + j] = oy[i] + 30 * sin(j * PI / 180.0);
 		}
 	}
 
-	for (int i = 0; i < num_obstacles * 360; i++) {
+	for (int i = 0; i < num_obstacles * num_particles; i++) {
 		draw_point_rgb(img, edgesx[i], edgesy[i], 255, 255, 255);
 	}
 
 	view_rgb_image(img);
 
 	// These determine the closest / furthest obstacles on the map (from origin)
-	minx = *std::min_element(edgesx, edgesx + num_obstacles * 360) - AREA_WIDTH / 2.0;
-	miny = *std::min_element(edgesy, edgesy + num_obstacles * 360) - AREA_WIDTH / 2.0;
-	double maxx = *std::max_element(edgesx, edgesx + num_obstacles * 360) + AREA_WIDTH / 2.0;
-	double maxy = *std::max_element(edgesy, edgesy + num_obstacles * 360) + AREA_WIDTH / 2.0;
+	minx = *std::min_element(edgesx, edgesx + num_obstacles * num_particles) - AREA_WIDTH / 2.0;
+	miny = *std::min_element(edgesy, edgesy + num_obstacles * num_particles) - AREA_WIDTH / 2.0;
+	double maxx = *std::max_element(edgesx, edgesx + num_obstacles * num_particles) + AREA_WIDTH / 2.0;
+	double maxy = *std::max_element(edgesy, edgesy + num_obstacles * num_particles) + AREA_WIDTH / 2.0;
 
 	// Determine the width and height of the new map
 	xw = int(round((maxx - minx) / reso));
@@ -89,9 +90,9 @@ void potential_field_planning(image& img, double sx, double sy,
 
 	get_motion_model(motion);
 
-	while (d >= reso) {
+	while (d >= reso + 50) {
 		double minp = DBL_MAX;
-		int minix = -1 , miniy = -1;
+		int minix = -1, miniy = -1;
 
 		// Iterating over each possible command
 		for (int i = 0; i < 8; i++) {
@@ -122,9 +123,6 @@ void potential_field_planning(image& img, double sx, double sy,
 
 		// Display the xp and yp on the image
 		draw_point_rgb(img, xp, yp, 0, 0, 255);
-
-		view_rgb_image(img);
-		cin.get();
 	}
 
 
@@ -136,8 +134,7 @@ void potential_field_planning(image& img, double sx, double sy,
 
 	delete[] motion;
 
-
-
+	view_rgb_image(img);
 }
 
 void get_motion_model(int**& motion) {

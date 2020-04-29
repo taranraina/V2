@@ -6,7 +6,7 @@
 using namespace std;
 
 const double KP = 5.0; // Attractive pulse
-const double ETA = 200.0; // Repulsive pulse
+const double ETA = 500.0; // Repulsive pulse
 const double AREA_WIDTH = 200.0; // Potential area width
 
 void calculate_potential_field(image& img, double& minx, double& miny, double**& pmap, double gx, double gy,

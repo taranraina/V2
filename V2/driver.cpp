@@ -63,16 +63,16 @@ int main()
 	// the library, but it will be implemented soon.
 
 	activate_simulation(width1, height1, x_obs, y_obs, size_obs, N_obs,
-		"robot_A.bmp", "robot_A.bmp", "background.bmp", "obstacle.bmp", D, Lx, Ly, Ax, Ay, alpha_max);
+		"robot_A.bmp", "robot_A.bmp", "background.bmp", "obstacle.bmp", D, Lx, Ly, Ax, Ay, alpha_max, 1);
 
 	// open an output file if needed for testing or plotting
 	//	ofstream fout("sim1.txt");
 	//	fout << scientific;
 
 	// set robot initial position (pixels) and angle (rad)
-	x0 = 320;
-	y0 = 200;
-	theta0 = 0;
+	x0 = 300;
+	y0 = 300;
+	theta0 = 5*PI/4;
 	set_robot_position(x0, y0, theta0);
 
 	// set initial inputs / on-line adjustable parameters /////////
@@ -161,7 +161,9 @@ int main()
 
 		potential_field_planning(rgb, x,
 			y, 0, 0, x_obs,
-			y_obs, N_obs, 1, 70);
+			y_obs, N_obs, 5, 70);
+			
+		turn(250, pw_l, pw_r);
 
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)
@@ -178,7 +180,7 @@ int main()
 		set_inputs(pw_l, pw_r, pw_laser, laser,
 			light, light_gradient, light_dir, image_noise,
 			max_speed, opponent_max_speed);
-
+		
 		view_rgb_image(rgb);
 
 		// don't need to simulate too fast

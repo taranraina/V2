@@ -1,4 +1,4 @@
-#pragma once
+
 const int N_MAX = 100;
 
 class robot_system {
@@ -33,8 +33,8 @@ public:
 	int level;
 
 	// constructor -- set default simulation parameters
-	robot_system(double D, double Lx, double Ly, double Ax, double Ay,
-		double alpha_max);
+	robot_system(double D, double Lx, double Ly,
+		double Ax, double Ay, double alpha_max, int n_robot);
 
 	~robot_system();
 
@@ -46,13 +46,16 @@ int activate_simulation(double width, double height,
 	double x_obs[], double y_obs[], double size_obs[], int N_obs,
 	char robot_file[], char opponent_file[], char background_file[],
 	char obstacle_file[], double D, double Lx, double Ly,
-	double Ax, double Ay, double alpha_max);
+	double Ax, double Ay, double alpha_max, int n_robot);
 
 int deactivate_simulation();
 
 int set_inputs(int pw_l, int pw_r, int pw_laser, int laser,
 	double light, double light_gradient, double light_dir,
 	double image_noise, double max_speed, double opponent_max_speed);
+
+int set_opponent_inputs(int pw_l, int pw_r, int pw_laser, int laser,
+	double max_speed);
 
 int acquire_image_sim(image &rgb);
 
@@ -62,7 +65,7 @@ int set_robot_position(double x, double y, double theta);
 
 int set_opponent_position(double x, double y, double theta);
 
-int rotate(image &a, image &b, double theta);
+int rotate(image &a, image &b, image &c, double theta, int ig, int jg);
 
 int append(image &a, image &b, int ip, int jp);
 
@@ -70,3 +73,6 @@ int draw_laser(robot *P, image &rgb);
 
 int draw_point_rgb_laser(image &rgb, int ip, int jp, int R, int G, int B);
 
+int wait_for_player();
+
+int join_player();
