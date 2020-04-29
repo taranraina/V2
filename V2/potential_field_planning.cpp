@@ -5,7 +5,7 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 	double reso, double rr, int& xw, int& yw)
 {
 	const int num_particles = 360;
-	const int radius_padding = 70;
+	const int radius_padding = 100;
 	const double PI = atan(1) * 4;
 
 	// Convert centroid to edges

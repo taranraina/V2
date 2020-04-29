@@ -515,3 +515,14 @@ int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[
 
 	return 0;
 }
+
+bool are_robots_close(int x, int y, int xo, int yo)
+{
+	const double distance_threshold = 200;
+
+	double distance = sqrt(pow(x - xo, 2) + pow(y - yo, 2));
+
+	cout << distance << endl;
+
+	return distance <= distance_threshold;
+}

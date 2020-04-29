@@ -75,7 +75,7 @@ int main()
 	theta0 = PI/2;
 	set_robot_position(x0, y0, theta0);
 
-	set_opponent_position(150, 300, 0);
+	set_opponent_position(200, 358, 0);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
@@ -181,7 +181,12 @@ int main()
 		// laser -- (0 - laser off, 1 - fire laser for 3 s)
 		// max_speed -- pixels/s for right and left wheels
 
-		controller(mini_destinationx, mini_destinationy, theta, pw_l, pw_r);
+		if (!are_robots_close(x, y, xo, yo))
+			controller(mini_destinationx, mini_destinationy, theta, pw_l, pw_r);
+		else {
+			pw_l = 1500;
+			pw_r = 1500;
+		}
 
 		set_inputs(pw_l, pw_r, pw_laser, laser,
 			light, light_gradient, light_dir, image_noise,
