@@ -63,7 +63,7 @@ int main()
 	// the library, but it will be implemented soon.
 
 	activate_simulation(width1, height1, x_obs, y_obs, size_obs, N_obs,
-		"robot_A.bmp", "robot_A.bmp", "background.bmp", "obstacle.bmp", D, Lx, Ly, Ax, Ay, alpha_max, 1);
+		"robot_A.bmp", "robot_B.bmp", "background.bmp", "obstacle.bmp", D, Lx, Ly, Ax, Ay, alpha_max, 2);
 
 	// open an output file if needed for testing or plotting
 	//	ofstream fout("sim1.txt");
