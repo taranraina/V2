@@ -28,7 +28,7 @@ void init(double& width1, double& height1,
 
 	// position of robot axis of rotation halfway between wheels (pixels)
 	// relative to the robot image center in local coordinates
-	Ax = 37.0;
+	Ax = 0.0;
 	Ay = 0.0;
 
 	alpha_max = 3.14159; // max range of laser / gripper (rad)
