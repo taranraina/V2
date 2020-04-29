@@ -162,7 +162,7 @@ int main()
 		int mini_destinationy[2];
 
 		potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
-			y, 0, 200, x_obs,
+			y, 10, 100, x_obs,
 			y_obs, N_obs, 5, 500);
 			
 		// change the inputs to move the robot around

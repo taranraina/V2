@@ -418,15 +418,15 @@ void controller(int* mini_destinationx, int* mini_destinationy, double theta, in
 		while (theta_expected < 0) theta_expected = theta_expected + 2* PI;
 	}
 
-	if (abs(theta - theta_expected) > 15 * (PI / 180)) // Tolerance
+	if (abs(theta - theta_expected) > 7 * (PI / 180)) // Tolerance
 	{
 		if (theta - theta_expected < 0)
-			turn(100, pw_l, pw_r);
+			turn(50, pw_l, pw_r);
 		else
-			turn(-100, pw_l, pw_r);
+			turn(-50, pw_l, pw_r);
 	}
 	else {
-		int forward = 100;
+		int forward = 150;
 		pw_l = 1500 - forward;
 		pw_r = 1500 + forward;
 	}
