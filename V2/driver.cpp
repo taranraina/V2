@@ -9,6 +9,7 @@ using namespace std;
 
 #define KEY(c) ( GetAsyncKeyState((int)(c)) & (SHORT)0x8000 )
 
+#include <cmath>
 #include "image_transfer5.h"
 
 // include this header file for computer vision functions
@@ -22,6 +23,7 @@ using namespace std;
 #include "helper.h"
 
 extern robot_system S1;
+const double PI = atan(1) * 4;
 
 int main()
 {
@@ -153,6 +155,8 @@ int main()
 		int x, y;
 		double theta;
 		calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta);
+
+		robot_circle(rgb, PI, x, y);
 
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)

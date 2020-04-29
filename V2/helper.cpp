@@ -392,3 +392,15 @@ int calculate_robot_position(int &x, int &y, int ic[], int jc[], double Ravg[], 
 
 	return 0;
 }
+
+void robot_circle(image& img, double PI, int x, int y)
+{
+	int robot_r = 70;
+	float num_particles = 100;
+	for (int i = 0; i < num_particles; i++) {
+		int X = x + robot_r *cos( ((i * 360) / num_particles) * PI / 180.0);
+		int Y = y + robot_r * sin( ((i * 360) / num_particles) * PI / 180.0);
+
+		draw_point_rgb(img, X, Y, 255, 0, 255);
+	}
+}
