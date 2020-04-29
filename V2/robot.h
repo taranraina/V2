@@ -1,3 +1,4 @@
+#pragma once
 
 // mobile robot simulation class
 

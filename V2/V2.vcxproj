@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h" />
+    <ClInclude Include="image_transfer5.h" />
     <ClInclude Include="ran.h" />
     <ClInclude Include="robot.h" />
     <ClInclude Include="shared_memory.h" />

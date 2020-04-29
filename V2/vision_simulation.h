@@ -1,4 +1,4 @@
-
+#pragma once
 const int N_MAX = 100;
 
 class robot_system {

@@ -1,3 +1,4 @@
+#pragma once
 
 // image types
 // RGB_IMAGE   is 3 bytes per pixel

@@ -1,3 +1,4 @@
+#pragma once
 
 // computer vision functions header
 

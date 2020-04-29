@@ -1,3 +1,4 @@
+#pragma once
 
 // The following routines are from the book "Numerical Recipes in C" 
 // -- this book has many other useful numerical functions along with

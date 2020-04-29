@@ -32,6 +32,9 @@ int main()
 	int N_obs;
 	double x_obs[50], y_obs[50], size_obs[50];
 	double D, Lx, Ly, Ax, Ay, alpha_max;
+	int ic_c[20], jc_c[20];
+	int nlabel, thresh1, thresh2;
+	double Ravg[20], Gavg[20], Bavg[20];
 	double tc, tc0; // clock time
 
 	init( width1,  height1,
@@ -71,7 +74,7 @@ int main()
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
-	turn(-250, pw_l, pw_r);
+	turn(-50, pw_l, pw_r);
 	pw_laser = 1500; // pulse width for laser servo (us)
 	laser = 0; // laser input (0 - off, 1 - fire)
 
@@ -98,7 +101,7 @@ int main()
 	// in addition, you can set the robot inputs to move it around
 	// the image and fire the laser.
 
-	image rgb;
+	image rgb, rgb0, grey1, grey2, labels;
 	int height, width;
 
 	// note that the vision simulation library currently
@@ -106,36 +109,49 @@ int main()
 	width = 640;
 	height = 480;
 
-	rgb.type = RGB_IMAGE;
-	rgb.width = width;
-	rgb.height = height;
+	init_image(rgb, width, height, RGB_IMAGE);
+	init_image(rgb0, width, height, RGB_IMAGE);
+	init_image(grey1, width, height, GREY_IMAGE);
+	init_image(grey2, width, height, GREY_IMAGE);
+	init_image(labels, width, height, LABEL_IMAGE);
+
+	allocate_image(rgb);
+	allocate_image(rgb0);
+	allocate_image(grey1);
+	allocate_image(grey2);
+	allocate_image(labels);
 
 	// allocate memory for the images
-	allocate_image(rgb);
+	
 
 	// measure initial clock time
 	tc0 = high_resolution_time();
+	thresh1 = 50;
 
 	while (1) {
 
 		// simulates the robots and acquires the image from simulation
 		acquire_image_sim(rgb);
+		copy(rgb, rgb0);
 
 		tc = high_resolution_time() - tc0;
 
-		// fire laser immediately
-		if (tc > 0) laser = 1;
+		// TODO: Make this a function called centroid tracking
 
-		// turn off the laser so we can fire it again later
-		if (tc > 10) laser = 0;
-
-		// fire laser at tc = 20 s
-		if (tc > 20) {
-			laser = 1;
-
-			// turn laser angle alpha at the same time
-			pw_laser = 1000;
+		get_labels(rgb0, grey1, grey2, labels, nlabel, thresh1);
+		copy(rgb, rgb0);
+		for (int i = 0; i <= nlabel; i++)
+		{
+			greyscale_centroid(rgb0, grey1, grey2, labels, ic_c[i], jc_c[i], i);
+			copy(rgb, rgb0);
+			view_rgb_image(rgb);
+			calculate_average_RGB(rgb0, labels, i, Ravg[i], Gavg[i], Bavg[i]);
 		}
+		copy(rgb, rgb0);
+
+		int x, y;
+		double theta;
+		calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta);
 
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)

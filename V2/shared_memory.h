@@ -1,3 +1,4 @@
+#pragma once
 
 // function that uses the Windows function CreateFileMapping(...) to create/access
 // a shared memory block between two or more programs.
