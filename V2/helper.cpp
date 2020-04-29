@@ -431,3 +431,85 @@ void controller(int* mini_destinationx, int* mini_destinationy, double theta, in
 		pw_r = 1500 + forward;
 	}
 }
+
+int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[], int nlabels, double &theta)
+{	
+	int nl, ir, jr, ig, jg, flag = 1;
+	static int ir_p = 0, jr_p = 0, ig_p = 0, jg_p = 0;
+	int width = 640;
+	int height = 480;
+	ir = 0;
+	jr = 0;
+	ig = 0;
+	jg = 0;
+
+	for (nl = 0; nl <= nlabels; nl++)
+	{
+		//Orange target
+		if (Ravg[nl] > 0.8 && Gavg[nl] > 0.6 && Bavg[nl] < 0.5)
+		{
+			ir = ic[nl];
+			jr = jc[nl];
+		}
+
+		//Blue target
+		if (Ravg[nl] < 0.2 && Gavg[nl] > 0.5 && Bavg[nl] > 0.75)
+		{
+			ig = ic[nl];
+			jg = jc[nl];
+		}
+
+	}
+
+	//assume that the green target is on the left and the red target is on the 
+	//the angle the robot has turned is (jr-jg)/(ir-ig)
+	//the center of the robot is the average position between the red and green target
+
+	//cout << "\nig=" << ig << "\tjg=" << jg;
+	//cout << "\nir=" << ir << "\tjr=" << jr;
+
+	//if the robot went partially out of bounds, then use the previous value for an approximation based on the remaining color still in bound
+	//and send a command to either move it back in bounds
+	//
+	//Returning 1 means to reverse
+	//Returning 2 means to go forward
+	if (ig == 0 && jg == 0)
+	{
+		cout << "\Blue marker is out of bounds.";
+		ig = ig_p;
+
+		x = (ig + ir) / 2;
+		y = (jg + jr) / 2;
+
+		theta = atan2((jg - jr), (ig - ir));
+
+		//if the green indicator left from the right side, then the robot is facing forward, need to reverse it
+		return 1;
+
+	}
+	else if (ir == 0 && jr == 0)
+	{
+		cout << "\nOrange marker is out of bounds.";
+		ir = ir_p;
+
+		x = (ig + ir) / 2;
+		y = (jg + jr) / 2;
+
+		theta = atan2((jg - jr), (ig - ir));
+
+		return 2;
+	}
+
+
+	ir_p = ir;
+	jr_p = jr;
+	ig_p = ig;
+	jg_p = jg;
+
+	x = (ig + ir) / 2;
+	y = (jg + jr) / 2;
+
+	theta = atan2((jg - jr), (ig - ir));
+
+	return 0;
+}

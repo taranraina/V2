@@ -19,10 +19,6 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 		}
 	}
 
-	for (int i = 0; i < num_obstacles * num_particles; i++) {
-		draw_point_rgb(img, edgesx[i], edgesy[i], 255, 255, 255);
-	}
-
 	view_rgb_image(img);
 
 	// These determine the closest / furthest obstacles on the map (from origin)

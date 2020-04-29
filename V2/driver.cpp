@@ -75,6 +75,7 @@ int main()
 	theta0 = PI/2;
 	set_robot_position(x0, y0, theta0);
 
+	set_opponent_position(150, 300, 0);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
@@ -156,13 +157,17 @@ int main()
 		double theta;
 		calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta);
 
+		int xo, yo;
+		double thetao;
+		calculate_opponent_position(xo, yo, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, thetao);
+
 		robot_circle(rgb, PI, x, y);
 
 		int mini_destinationx[2];
 		int mini_destinationy[2];
 
 		potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
-			y, 10, 100, x_obs,
+			y, xo, yo, x_obs,
 			y_obs, N_obs, 5, 500);
 			
 		// change the inputs to move the robot around
