@@ -9,11 +9,13 @@ void init(double& width1, double& height1,
 	width1 = 640;
 	height1 = 480;
 
-	N_obs = 1;
+	N_obs = 2;
 
-	x_obs[1] = 270; // pixels
-	y_obs[1] = 270; // pixels
+	x_obs[1] = 135; // pixels
+	y_obs[1] = 135; // pixels
 
+	x_obs[2] = 358; // pixels
+	y_obs[2] = 358; // pixels
 	// set robot model parameters ////////
 
 	D = 121.0; // distance between front wheels (pixels)
