@@ -420,10 +420,12 @@ void controller(int* mini_destinationx, int* mini_destinationy, double theta, in
 
 	if (abs(theta - theta_expected) > 7 * (PI / 180)) // Tolerance
 	{
+		int max_turn_speed = 50;
+
 		if (theta - theta_expected < 0)
-			turn(50, pw_l, pw_r);
+			turn(max_turn_speed, pw_l, pw_r);
 		else
-			turn(-50, pw_l, pw_r);
+			turn(-1*max_turn_speed, pw_l, pw_r);
 	}
 	else {
 		int forward = 150;

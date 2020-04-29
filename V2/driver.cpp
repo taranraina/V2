@@ -161,8 +161,6 @@ int main()
 		double thetao;
 		calculate_opponent_position(xo, yo, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, thetao);
 
-		robot_circle(rgb, PI, x, y);
-
 		int mini_destinationx[2];
 		int mini_destinationy[2];
 
