@@ -159,9 +159,9 @@ int main()
 
 		robot_circle(rgb, PI, x, y);
 
-		calculate_potential_field(rgb, 0, 400,
-			x_obs, y_obs, N_obs,
-			1, 70);
+		potential_field_planning(rgb, x,
+			y, 0, 0, x_obs,
+			y_obs, N_obs, 1, 70);
 
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)
