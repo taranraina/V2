@@ -16,3 +16,4 @@ int calculate_average_RGB(image rgb, image label, int nlabel, double &R, double 
 void init_image(image& img, int width, int height, int img_type);
 int calculate_robot_position(int &x, int &y, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[], int nlabels, double &theta);
 void robot_circle(image& img, double PI, int x, int y);
+void controller(int* mini_destinationx, int* mini_destinationy, double theta, int& pw_l, int& pw_r);

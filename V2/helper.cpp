@@ -404,3 +404,18 @@ void robot_circle(image& img, double PI, int x, int y)
 		draw_point_rgb(img, X, Y, 255, 0, 255);
 	}
 }
+
+void controller(int* mini_destinationx, int* mini_destinationy, double theta, int& pw_l, int& pw_r)
+{
+	double PI = atan(1) * 4;
+	double theta_expected = atan2(mini_destinationy[1] - mini_destinationy[0], mini_destinationx[1] - mini_destinationx[0]);
+
+	if (abs(theta - theta_expected) > 5 * (PI / 180)) // Tolerance
+	{
+		turn(50, pw_l, pw_r);
+	}
+	else {
+		pw_l = 1250;
+		pw_r = 1750;
+	}
+}

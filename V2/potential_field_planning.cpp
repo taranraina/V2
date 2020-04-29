@@ -64,7 +64,8 @@ void free_pmap(double** pmap, int xw, int yw) {
 	delete[] pmap;
 }
 
-void potential_field_planning(image& img, double sx, double sy, 
+void potential_field_planning(image& img, int* mini_destinationx, int* mini_destinationy, 
+	double sx, double sy,
 	double gx, double gy, double* ox, 
 	double* oy, int num_obstacles, double reso, double rr)
 {
@@ -89,6 +90,7 @@ void potential_field_planning(image& img, double sx, double sy,
 	int** motion;
 
 	get_motion_model(motion);
+	int counter = 0;
 
 	while (d >= reso + 50) {
 		double minp = DBL_MAX;
@@ -103,8 +105,8 @@ void potential_field_planning(image& img, double sx, double sy,
 			if (inx >= xw || iny >= yw) p = DBL_MAX;  // outside area
 			else {
 				int px = inx, py = iny;
-				if (inx == -1) px = xw + inx;
-				if (iny == -1) py = yw + iny;
+				if (inx < 0) px = xw + inx;
+				if (iny < 0) py = yw + iny;
 				p = pmap[px][py];
 			}
 			
@@ -123,8 +125,15 @@ void potential_field_planning(image& img, double sx, double sy,
 
 		// Display the xp and yp on the image
 		draw_point_rgb(img, xp, yp, 0, 0, 255);
-	}
 
+		if (counter == 2) break;
+		else{
+			mini_destinationx[counter] = xp;
+			mini_destinationy[counter] = yp;
+		}
+
+		counter++;
+	}
 
 	free_pmap(pmap, xw, yw);
 

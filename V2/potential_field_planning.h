@@ -14,7 +14,7 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 	double reso, double rr, int& xw, int& yw);
 double calc_attractive_potential(double x, double y, double gx, double gy);
 double calc_repulsive_potential(double x, double y, double* ox, double* oy, int num_obstacles, double rr);
-void potential_field_planning(image& img, double sx, double sy, double gx,
+void potential_field_planning(image& img, int* mini_destinationx, int* mini_destinationy, double sx, double sy, double gx,
 	double gy, double* ox, double* oy, 
 	int num_obstacles, double reso, double rr);
 

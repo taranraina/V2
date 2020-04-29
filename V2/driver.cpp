@@ -71,14 +71,13 @@ int main()
 
 	// set robot initial position (pixels) and angle (rad)
 	x0 = 300;
-	y0 = 300;
-	theta0 = 5*PI/4;
+	y0 = 100;
+	theta0 = PI/2;
 	set_robot_position(x0, y0, theta0);
 
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
-	turn(-50, pw_l, pw_r);
 	pw_laser = 1500; // pulse width for laser servo (us)
 	laser = 0; // laser input (0 - off, 1 - fire)
 
@@ -159,11 +158,13 @@ int main()
 
 		robot_circle(rgb, PI, x, y);
 
-		potential_field_planning(rgb, x,
-			y, 0, 0, x_obs,
+		int mini_destinationx[2];
+		int mini_destinationy[2];
+
+		potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
+			y, 600, 400, x_obs,
 			y_obs, N_obs, 5, 70);
 			
-		turn(250, pw_l, pw_r);
 
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)
@@ -177,6 +178,9 @@ int main()
 		// -- 2000 -> 90 deg
 		// laser -- (0 - laser off, 1 - fire laser for 3 s)
 		// max_speed -- pixels/s for right and left wheels
+
+		controller(mini_destinationx, mini_destinationy, theta, pw_l, pw_r);
+
 		set_inputs(pw_l, pw_r, pw_laser, laser,
 			light, light_gradient, light_dir, image_noise,
 			max_speed, opponent_max_speed);
