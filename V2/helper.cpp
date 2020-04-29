@@ -410,12 +410,24 @@ void controller(int* mini_destinationx, int* mini_destinationy, double theta, in
 	double PI = atan(1) * 4;
 	double theta_expected = atan2(mini_destinationy[1] - mini_destinationy[0], mini_destinationx[1] - mini_destinationx[0]);
 
-	if (abs(theta - theta_expected) > 5 * (PI / 180)) // Tolerance
+	if (theta < 0) {
+		while (theta < 0) theta = theta + 2 * PI;
+	}
+
+	if (theta_expected < 0) {
+		while (theta_expected < 0) theta_expected = theta_expected + 2* PI;
+	}
+
+	if (abs(theta - theta_expected) > 15 * (PI / 180)) // Tolerance
 	{
-		turn(50, pw_l, pw_r);
+		if (theta - theta_expected < 0)
+			turn(100, pw_l, pw_r);
+		else
+			turn(-100, pw_l, pw_r);
 	}
 	else {
-		pw_l = 1250;
-		pw_r = 1750;
+		int forward = 100;
+		pw_l = 1500 - forward;
+		pw_r = 1500 + forward;
 	}
 }

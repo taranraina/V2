@@ -5,6 +5,7 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 	double reso, double rr, int& xw, int& yw)
 {
 	const int num_particles = 360;
+	const int radius_padding = 30;
 	const double PI = atan(1) * 4;
 
 	// Convert centroid to edges
@@ -13,8 +14,8 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 
 	for (int i = 1; i <= num_obstacles; i++) {
 		for (int j = 0; j < num_particles; j++) {
-			edgesx[(i - 1) * num_particles + j] = ox[i] + 30 * cos(j * PI / 180.0);
-			edgesy[(i - 1) * num_particles + j] = oy[i] + 30 * sin(j * PI / 180.0);
+			edgesx[(i - 1) * num_particles + j] = ox[i] + radius_padding * cos(j * PI / 180.0);
+			edgesy[(i - 1) * num_particles + j] = oy[i] + radius_padding * sin(j * PI / 180.0);
 		}
 	}
 
@@ -46,7 +47,7 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 		for (int iy = 0; iy < yw; iy++) {
 			int y = iy * reso + miny;
 			double ug = calc_attractive_potential(x, y, gx, gy);
-			double uo = calc_repulsive_potential(x, y, edgesx, edgesy, num_obstacles * 360, rr);
+			double uo = calc_repulsive_potential(x, y, edgesx, edgesy, num_obstacles * num_particles, rr);
 			double uf = ug + uo;
 			pmap[ix][iy] = uf;
 		}
@@ -126,8 +127,7 @@ void potential_field_planning(image& img, int* mini_destinationx, int* mini_dest
 		// Display the xp and yp on the image
 		draw_point_rgb(img, xp, yp, 0, 0, 255);
 
-		if (counter == 2) break;
-		else{
+		if (counter < 2) {
 			mini_destinationx[counter] = xp;
 			mini_destinationy[counter] = yp;
 		}
@@ -195,9 +195,6 @@ double calc_repulsive_potential(double x, double y, double* ox, double* oy, int 
 	double dq = sqrt(pow(x - ox[minid], 2) + pow(y - oy[minid], 2));
 
 	if (dq <= rr) {
-		if (dq <= 0.1)
-			dq = 0.1;
-
 		return 0.5 * ETA * pow((1.0 / dq - 1.0 / rr), 2);
 	}
 	else return 0.0;

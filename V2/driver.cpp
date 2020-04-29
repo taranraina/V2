@@ -71,7 +71,7 @@ int main()
 
 	// set robot initial position (pixels) and angle (rad)
 	x0 = 300;
-	y0 = 100;
+	y0 = 200;
 	theta0 = PI/2;
 	set_robot_position(x0, y0, theta0);
 
@@ -162,10 +162,9 @@ int main()
 		int mini_destinationy[2];
 
 		potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
-			y, 600, 400, x_obs,
-			y_obs, N_obs, 5, 70);
+			y, 0, 200, x_obs,
+			y_obs, N_obs, 5, 300);
 			
-
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)
 
