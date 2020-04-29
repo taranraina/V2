@@ -1,0 +1,1 @@
+void init(double& width1, double& height1, int& N_obs, double&D, double&Lx, double&Ly, double&Ax, double&Ay, double&alpha_max);

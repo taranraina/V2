@@ -19,6 +19,7 @@ using namespace std;
 #include "vision_simulation.h"
 
 #include "timer.h"
+#include "helper.h"
 
 extern robot_system S1;
 
@@ -33,33 +34,9 @@ int main()
 	double D, Lx, Ly, Ax, Ay, alpha_max;
 	double tc, tc0; // clock time
 
-	// TODO: it might be better to put this model initialization
-	// section in a separate function
-
-	// note that the vision simulation library currently
-	// assumes an image size of 640x480
-	width1 = 640;
-	height1 = 480;
-
-	// number of obstacles (not currently implemented in the library)
-	N_obs = 0;
-
-	// set robot model parameters ////////
-
-	D = 121.0; // distance between front wheels (pixels)
-
-	// position of laser in local robot coordinates (pixels)
-	// note for Lx, Ly we assume in local coord the robot
-	// is pointing in the x direction		
-	Lx = 31.0;
-	Ly = 0.0;
-
-	// position of robot axis of rotation halfway between wheels (pixels)
-	// relative to the robot image center in local coordinates
-	Ax = 37.0;
-	Ay = 0.0;
-
-	alpha_max = 3.14159; // max range of laser / gripper (rad)
+	init( width1,  height1,
+		 N_obs, D, Lx,
+		Ly, Ax, Ay, alpha_max);
 
 	cout << "\npress space key to begin program.";
 	pause();

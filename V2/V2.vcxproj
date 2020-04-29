@@ -87,6 +87,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="driver.cpp" />
+    <ClCompile Include="helper.cpp" />
     <ClCompile Include="ran.cpp" />
     <ClCompile Include="ran2.cpp" />
     <ClCompile Include="ran3.cpp" />
@@ -100,6 +101,7 @@
     <ResourceCompile Include="V2.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="helper.h" />
     <ClInclude Include="ran.h" />
     <ClInclude Include="robot.h" />
     <ClInclude Include="shared_memory.h" />
