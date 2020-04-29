@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClCompile Include="driver.cpp" />
     <ClCompile Include="helper.cpp" />
+    <ClCompile Include="potential_field_planning.cpp" />
     <ClCompile Include="ran.cpp" />
     <ClCompile Include="ran2.cpp" />
     <ClCompile Include="ran3.cpp" />
@@ -103,6 +104,7 @@
   <ItemGroup>
     <ClInclude Include="helper.h" />
     <ClInclude Include="image_transfer5.h" />
+    <ClInclude Include="potential_field_planning.h" />
     <ClInclude Include="ran.h" />
     <ClInclude Include="robot.h" />
     <ClInclude Include="shared_memory.h" />

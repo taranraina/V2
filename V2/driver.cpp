@@ -21,6 +21,7 @@ using namespace std;
 
 #include "timer.h"
 #include "helper.h"
+#include "potential_field_planning.h"
 
 extern robot_system S1;
 const double PI = atan(1) * 4;
@@ -157,6 +158,10 @@ int main()
 		calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta);
 
 		robot_circle(rgb, PI, x, y);
+
+		calculate_potential_field(rgb, 0, 400,
+			x_obs, y_obs, N_obs,
+			1, 70);
 
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)
