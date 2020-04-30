@@ -75,7 +75,7 @@ int main()
 	theta0 = PI/2;
 	set_robot_position(x0, y0, theta0);
 
-	set_opponent_position(200, 358, 0);
+	set_opponent_position(100, 300, 0);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs

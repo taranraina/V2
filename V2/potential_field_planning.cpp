@@ -127,6 +127,7 @@ void potential_field_planning(image& img, int* mini_destinationx, int* mini_dest
 			mini_destinationx[counter] = xp;
 			mini_destinationy[counter] = yp;
 		}
+		if (counter == 2) break;
 
 		counter++;
 	}

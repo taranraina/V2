@@ -422,7 +422,7 @@ void controller(int* mini_destinationx, int* mini_destinationy, double theta, in
 	convert_theta_positive(theta);
 	convert_theta_positive(theta_expected);
 
-	if (abs(theta - theta_expected) > 7 * (PI / 180)) // Tolerance
+	if (abs(theta - theta_expected) > 10 * (PI / 180)) // Tolerance
 	{
 		int max_turn_speed = 50;
 
