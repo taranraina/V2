@@ -2,6 +2,7 @@
 
 const double PI = atan(1) * 4;
 extern robot_system *S1;
+#define KEY(c) ( GetAsyncKeyState((int)(c)) & (SHORT)0x8000 )
 
 void init(double& width1, double& height1,
 	int& N_obs, double&D, double&Lx,
@@ -1089,4 +1090,51 @@ bool is_obstacle(image grey, image label, int n)
 		return false;
 	}
 
+}
+
+int move_opponent(int &pw_l, int &pw_r)
+{
+
+	if (KEY(VK_UP))
+	{
+		pw_l = pw_l - 50;
+		pw_r = pw_r + 50;
+	}
+	else if (KEY(VK_DOWN))
+	{
+		pw_l = pw_l + 50;
+		pw_r = pw_r - 50;
+	}
+	else if (KEY(VK_RIGHT))
+	{
+		pw_l = pw_l - 50;
+		pw_r = pw_r - 50;
+	}
+	else if (KEY(VK_LEFT))
+	{
+		pw_l = pw_l + 50;
+		pw_r = pw_r + 50;
+	}
+
+	if (pw_l > 2000)
+	{
+		pw_l = 2000;
+	}
+
+	if (pw_l < 1000)
+	{
+		pw_l = 1000;
+	}
+
+	if (pw_r > 2000)
+	{
+		pw_r = 2000;
+	}
+
+	if (pw_l < 1000)
+	{
+		pw_l = 1000;
+	}
+
+	return 0;
 }

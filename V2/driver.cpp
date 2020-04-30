@@ -77,7 +77,7 @@ int main()
 	theta0 = PI;
 	set_robot_position(x0, y0, theta0);
 
-	set_opponent_position(150, 300, 0);
+	set_opponent_position(358, 430, 0);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
@@ -167,7 +167,7 @@ int main()
 		}
 		copy(rgb, rgb0);
 
-		//move_opponent(pwo_l, pwo_r);
+		move_opponent(pwo_l, pwo_r);
 
 		//int x, y;
 		double theta;
@@ -236,7 +236,7 @@ int main()
 		shoot_laser(io, jo, height, width, obstacle_laser, laser);
 		escape_point(io, jo, ig, jg, height, width, obstacle_laser, ib, jb, ie, je);
 
-		draw_point_rgb(rgb, ie, je, 255, 0, 0);
+		//draw_point_rgb(rgb, ie, je, 255, 0, 0);
 
 		set_inputs(pw_l, pw_r, pw_laser, laser,
 			light, light_gradient, light_dir, image_noise,
