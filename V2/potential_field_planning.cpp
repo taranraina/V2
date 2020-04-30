@@ -23,7 +23,7 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 		draw_point_rgb(img, edgesx[i], edgesy[i], 255, 255, 255);
 	}
 
-	view_rgb_image(img);
+	//view_rgb_image(img);
 
 	// These determine the closest / furthest obstacles on the map (from origin)
 	minx = *std::min_element(edgesx, edgesx + num_obstacles * num_particles) - AREA_WIDTH / 2.0;
@@ -144,7 +144,7 @@ void potential_field_planning(image& img, int* mini_destinationx, int* mini_dest
 
 	delete[] motion;
 
-	view_rgb_image(img);
+	//view_rgb_image(img);
 }
 
 void get_motion_model(int**& motion) {

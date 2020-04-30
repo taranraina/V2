@@ -153,7 +153,6 @@ int main()
 		{
 			greyscale_centroid(rgb0, grey1, grey2, labels, ic_c[i], jc_c[i], i);
 			copy(rgb, rgb0);
-			view_rgb_image(rgb);
 			calculate_average_RGB(rgb0, labels, i, Ravg[i], Gavg[i], Bavg[i]);
 		}
 		copy(rgb, rgb0);
