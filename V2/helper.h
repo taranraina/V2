@@ -35,3 +35,4 @@ int binary_centroid(image grey, int ic[10], int jc[10]);
 int get_labels_inverted(image rgb, image grey1, image grey2, image label, int &nlabels, int thresh);
 bool is_obstacle(image grey, image label, int n);
 int move_opponent(int &pw_l, int &pw_r);
+int get_radius(image& img, int x, int y);

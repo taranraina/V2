@@ -15,12 +15,12 @@ void init(double& width1, double& height1,
 
 	N_obs = 2;
 
-	x_obs[1] = 135; // pixels
-	y_obs[1] = 135; // pixels
+	x_obs[1] = 423; // pixels
+	y_obs[1] = 178; // pixels
 	size_obs[1] = 1;
 
-	x_obs[2] = 358; // pixels
-	y_obs[2] = 358; // pixels
+	x_obs[2] = 231; // pixels
+	y_obs[2] = 383; // pixels
 	size_obs[2] = 1;
 	// set robot model parameters ////////
 
@@ -777,6 +777,17 @@ int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, ima
 	copy(obstacle, obstacle_laser);
 	binary_centroid(obstacle, ib, jb); //ib and jb contain the centroids of the obstacles
 
+	int num_obs = 0;
+
+	for (int i = 1; i < 10; i++) {
+		if (ib[i] != 0) num_obs++;
+		else break;
+	}
+
+	for (int i = 1; i <= num_obs; i++) {
+		int radius = get_radius(obstacle, ib[i], jb[i]);
+	}
+
 
 
 	//draw_circle(obstacle, 30, 90, ib[1], jb[1]);
@@ -1137,4 +1148,27 @@ int move_opponent(int &pw_l, int &pw_r)
 	}
 
 	return 0;
+}
+
+int get_radius(image& img, int x, int y)
+{
+	int r = 0;
+
+	ibyte* pl;
+
+	for (int k = x + y * img.width;;) {
+		pl = img.pdata + k;
+
+		if (*pl == 0) {
+			break;
+		}
+		r++;
+		x++;
+
+		k = x + y * img.width;
+
+		if (x == img.width) break;
+	}
+
+	return r;
 }

@@ -232,7 +232,29 @@ int main()
 			}
 			create_obstacle_image(rgb, obstacles, obstacle_laser, labels, nlabel, ic_c, jc_c, Ravg, Gavg, Bavg, 50, ib, jb);
 			initialized = false;
+
+			cout << endl << "ic_c[1]" << " " << ic_c[1] << " " << "jc_c[1]" << " " << jc_c[1] << endl;
+			cout << endl << "ic_c[2]" << " " << ic_c[2] << " " << "jc_c[2]" << " " << jc_c[2] << endl;
+			cout << endl << "ic_c[3]" << " " << ic_c[3] << " " << "jc_c[3]" << " " << jc_c[3] << endl;
+			cout << endl << "ic_c[4]" << " " << ic_c[4] << " " << "jc_c[4]" << " " << jc_c[4] << endl;
+			cout << endl << "ic_c[5]" << " " << ic_c[5] << " " << "jc_c[5]" << " " << jc_c[5] << endl;
+
+			cout << endl << "ib[1] " << ib[1] << " jb[1] " << jb[1] << endl;
+			cout << endl << "ib[2] " << ib[2] << " jb[2] " << jb[2] << endl;
+
 		}
+		/*cout << endl << "ic_c[1]" << ic_c[1] << "jc_c[1]" << jc_c[1] << endl;
+		cout << endl << "ic_c[2]" << ic_c[2] << "jc_c[2]" << jc_c[2] << endl;
+		cout << endl << "ic_c[3]" << ic_c[1] << "jc_c[3]" << jc_c[3] << endl;
+		cout << endl << "ic_c[4]" << ic_c[2] << "jc_c[4]" << jc_c[4] << endl;
+		cout << endl << "ic_c[5]" << ic_c[2] << "jc_c[5]" << jc_c[5] << endl;
+
+		cout << endl << "ib[1]" << ib[1] << "jb[1]" << jb[1] << endl;
+		cout << endl << "ib[2]" << ib[2] << "jb[2]" << jb[2] << endl;*/
+
+
+
+
 		shoot_laser(io, jo, height, width, obstacle_laser, laser);
 		escape_point(io, jo, ig, jg, height, width, obstacle_laser, ib, jb, ie, je);
 
