@@ -5,7 +5,7 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 	double reso, double rr, int& xw, int& yw)
 {
 	const int num_particles = 360;
-	const int radius_padding = 100;
+	const int radius_padding = 40;
 	const double PI = atan(1) * 4;
 
 	// Convert centroid to edges
@@ -17,6 +17,10 @@ void calculate_potential_field(image& img, double& minx, double& miny, double**&
 			edgesx[(i - 1) * num_particles + j] = ox[i] + radius_padding * cos(j * PI / 180.0);
 			edgesy[(i - 1) * num_particles + j] = oy[i] + radius_padding * sin(j * PI / 180.0);
 		}
+	}
+
+	for (int i = 0; i < num_obstacles * 360; i++) {
+		draw_point_rgb(img, edgesx[i], edgesy[i], 255, 255, 255);
 	}
 
 	view_rgb_image(img);

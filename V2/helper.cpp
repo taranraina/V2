@@ -1,4 +1,4 @@
-#include "helper.h"
+﻿#include "helper.h"
 
 void init(double& width1, double& height1, 
 	int& N_obs, double&D, double&Lx, 
@@ -456,15 +456,8 @@ int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[
 		{
 			ir = ic[nl];
 			jr = jc[nl];
+			break;
 		}
-
-		//Blue target
-		if (Ravg[nl] < 0.2 && Gavg[nl] > 0.5 && Bavg[nl] > 0.75)
-		{
-			ig = ic[nl];
-			jg = jc[nl];
-		}
-
 	}
 
 	//assume that the green target is on the left and the red target is on the 
@@ -479,21 +472,7 @@ int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[
 	//
 	//Returning 1 means to reverse
 	//Returning 2 means to go forward
-	if (ig == 0 && jg == 0)
-	{
-		cout << "\Blue marker is out of bounds.";
-		ig = ig_p;
-
-		x = (ig + ir) / 2;
-		y = (jg + jr) / 2;
-
-		theta = atan2((jg - jr), (ig - ir));
-
-		//if the green indicator left from the right side, then the robot is facing forward, need to reverse it
-		return 1;
-
-	}
-	else if (ir == 0 && jr == 0)
+	if (ir == 0 && jr == 0)
 	{
 		cout << "\nOrange marker is out of bounds.";
 		ir = ir_p;
@@ -512,10 +491,10 @@ int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[
 	ig_p = ig;
 	jg_p = jg;
 
-	x = (ig + ir) / 2;
-	y = (jg + jr) / 2;
+	x = ir;
+	y = jr;
 
-	theta = atan2((jg - jr), (ig - ir));
+	theta = 0;
 
 	return 0;
 }
@@ -529,4 +508,50 @@ bool are_robots_close(int x, int y, int xo, int yo)
 	cout << distance << endl;
 
 	return distance <= distance_threshold;
-} 
+}
+
+int move_opponent(int &pw_l, int &pw_r)
+{
+	if (KEY(VK_UP))
+	{
+		pw_l = pw_l - 50;
+		pw_r = pw_r + 50;
+	}
+	else if (KEY(VK_DOWN))
+	{
+		pw_l = pw_l + 50;
+		pw_r = pw_r - 50;
+	}
+	else if (KEY(VK_RIGHT))
+	{
+		pw_l = pw_l - 50;
+		pw_r = pw_r - 50;
+	}
+	else if (KEY(VK_LEFT))
+	{
+		pw_l = pw_l + 50;
+		pw_r = pw_r + 50;
+	}
+
+	if (pw_l > 2000)
+	{
+		pw_l = 2000;
+	}
+
+	if (pw_l < 1000)
+	{
+		pw_l = 1000;
+	}
+
+	if (pw_r > 2000)
+	{
+		pw_r = 2000;
+	}
+
+	if (pw_l < 1000)
+	{
+		pw_l = 1000;
+	}
+
+	return 0;
+}

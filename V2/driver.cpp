@@ -29,7 +29,7 @@ const double PI = atan(1) * 4;
 int main()
 {
 	double x0, y0, theta0, max_speed, opponent_max_speed;
-	int pw_l, pw_r, pw_laser, laser;
+	int pw_l, pw_r, pwo_l, pwo_r, pw_laser, laser;
 	double light, light_gradient, light_dir, image_noise;
 	double width1, height1;
 	int N_obs;
@@ -72,10 +72,10 @@ int main()
 	// set robot initial position (pixels) and angle (rad)
 	x0 = 500;
 	y0 = 100;
-	theta0 = PI/2;
+	theta0 = PI;
 	set_robot_position(x0, y0, theta0);
 
-	set_opponent_position(100, 300, 0);
+	set_opponent_position(150, 300, 0);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
@@ -132,6 +132,11 @@ int main()
 	tc0 = high_resolution_time();
 	thresh1 = 50;
 
+	pwo_l = 1500;
+	pwo_r = 1500;
+
+	int counter = 0;
+
 	while (1) {
 
 		// simulates the robots and acquires the image from simulation
@@ -153,6 +158,8 @@ int main()
 		}
 		copy(rgb, rgb0);
 
+		move_opponent(pwo_l, pwo_r);
+
 		int x, y;
 		double theta;
 		calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta);
@@ -164,9 +171,12 @@ int main()
 		int mini_destinationx[2];
 		int mini_destinationy[2];
 
-		potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
-			y, xo, yo, x_obs,
-			y_obs, N_obs, 5, 500);
+		if (counter%10 == 0) {
+			potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
+				y, xo, yo, x_obs,
+				y_obs, N_obs, 5, 500);
+		}
+		counter++;
 			
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)
@@ -207,6 +217,8 @@ int main()
 		set_inputs(pw_l, pw_r, pw_laser, laser,
 			light, light_gradient, light_dir, image_noise,
 			max_speed, opponent_max_speed);
+
+		set_opponent_inputs(pwo_l, pwo_r, 1500, 0, opponent_max_speed);
 		
 		view_rgb_image(rgb);
 

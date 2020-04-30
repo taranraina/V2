@@ -1,7 +1,11 @@
 #include <iostream>
 #include <cmath>
+#include <Windows.h>
+
 #include "image_transfer5.h"
 #include "vision.h"
+
+#define KEY(c) ( GetAsyncKeyState((int)(c)) & (SHORT)0x8000 )
 
 using namespace std;
 
@@ -21,3 +25,4 @@ void robot_circle(image& img, double PI, int x, int y);
 void controller(int* mini_destinationx, int* mini_destinationy, double theta, int& pw_l, int& pw_r);
 bool are_robots_close(int x, int y, int xo, int yo);
 void convert_theta_positive(double& theta);
+int move_opponent(int &pw_l, int &pw_r);
