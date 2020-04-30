@@ -39,11 +39,13 @@ int main()
 	int nlabel, thresh1, thresh2;
 	double Ravg[20], Gavg[20], Bavg[20];
 	double tc, tc0; // clock time
+	static int ib[10], jb[10];
+	int ie, je; //escape points
 
 	init( width1,  height1,
 		 N_obs, D, Lx,
 		 Ly, Ax, Ay, alpha_max,
-		 x_obs, y_obs);
+		 x_obs, y_obs, size_obs);
 
 	cout << "\npress space key to begin program.";
 	pause();
@@ -105,7 +107,7 @@ int main()
 	// in addition, you can set the robot inputs to move it around
 	// the image and fire the laser.
 
-	image rgb, rgb0, grey1, grey2, labels;
+	image rgb, rgb0, grey1, grey2, labels, obstacles, obstacle_laser;
 	int height, width;
 
 	// note that the vision simulation library currently
@@ -118,12 +120,17 @@ int main()
 	init_image(grey1, width, height, GREY_IMAGE);
 	init_image(grey2, width, height, GREY_IMAGE);
 	init_image(labels, width, height, LABEL_IMAGE);
+	init_image(obstacles, width, height, GREY_IMAGE);
+	init_image(obstacle_laser, width, height, GREY_IMAGE);
+
 
 	allocate_image(rgb);
 	allocate_image(rgb0);
 	allocate_image(grey1);
 	allocate_image(grey2);
 	allocate_image(labels);
+	allocate_image(obstacles);
+	allocate_image(obstacle_laser);
 
 	// allocate memory for the images
 	
@@ -136,6 +143,9 @@ int main()
 	pwo_r = 1500;
 
 	int counter = 0;
+	int x, y, ig, jg;//ig,jg centroid of green marker
+	int xo, yo, io, jo;//io,jo centroid of orange marker
+	bool initialized = true;
 
 	while (1) {
 
@@ -157,15 +167,15 @@ int main()
 		}
 		copy(rgb, rgb0);
 
-		move_opponent(pwo_l, pwo_r);
+		//move_opponent(pwo_l, pwo_r);
 
-		int x, y;
+		//int x, y;
 		double theta;
-		calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta);
-
-		int xo, yo;
+		calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta, ig, jg);
+		
+		//int xo, yo;
 		double thetao;
-		calculate_opponent_position(xo, yo, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, thetao);
+		calculate_opponent_position(xo, yo, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, thetao, io, jo);
 
 		int mini_destinationx[2];
 		int mini_destinationy[2];
@@ -212,6 +222,21 @@ int main()
 				pw_r = 1500;
 			}
 		}
+		position_laser(pw_laser, theta, io, jo, ig, jg);
+		if (initialized)
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				ib[i] = 0;
+				jb[i] = 0;
+			}
+			create_obstacle_image(rgb, obstacles, obstacle_laser, labels, nlabel, ic_c, jc_c, Ravg, Gavg, Bavg, 50, ib, jb);
+			initialized = false;
+		}
+		shoot_laser(io, jo, height, width, obstacle_laser, laser);
+		escape_point(io, jo, ig, jg, height, width, obstacle_laser, ib, jb, ie, je);
+
+		draw_point_rgb(rgb, ie, je, 255, 0, 0);
 
 		set_inputs(pw_l, pw_r, pw_laser, laser,
 			light, light_gradient, light_dir, image_noise,

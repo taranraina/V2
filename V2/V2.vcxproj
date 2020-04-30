@@ -99,9 +99,6 @@
     <ClCompile Include="vision_simulation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="V2.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="helper.h" />
     <ClInclude Include="image_transfer5.h" />
     <ClInclude Include="potential_field_planning.h" />
