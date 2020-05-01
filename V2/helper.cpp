@@ -712,8 +712,11 @@ bool are_robots_close(int x, int y, int xo, int yo)
 int position_laser(int &pw_laser, double theta, int io, int jo, int ig, int jg) {
 	double lower_bound, upper_bound, theta_desired;
 	double pw_rad = 500 / (PI / 2);
+	double il, jl;
+	il = S1->P[1]->xg;
+	jl = S1->P[1]->yg;
 
-	theta_desired = atan2(jo - jg, io - ig);
+	theta_desired = atan2(jo - jl, io - il);
 
 	//first quadrant
 	if (theta >= 0 && theta <= PI / 2) {
@@ -827,6 +830,8 @@ int shoot_laser(int& pw_laser, double& thetar, int & io, int & jo, int& ig, int&
 {
 	double x0, y0, theta, r;
 	int i, j;
+	int previous;
+	int current = pw_laser;
 	static int count = 0;
 	// get start point of the laser
 	x0 = S1->P[1]->xg;
@@ -865,7 +870,7 @@ int shoot_laser(int& pw_laser, double& thetar, int & io, int & jo, int& ig, int&
 	}
 	count++;
 	cout << "\nShot is valid, waiting on Count > 20. Current count : " << count;
-	if (count > 30 ) {
+	if (count > 30 && pw_laser > 1050 && pw_laser < 1950 && current - previous < 15) {
 		cout << "\nLaser fired!";
 		position_laser(pw_laser, thetar, io, jo, ig, jg);
 		laser = 1;
