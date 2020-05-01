@@ -77,12 +77,12 @@ int main()
 	//	fout << scientific;
 
 	// set robot initial position (pixels) and angle (rad)
-	x0 = 470;
-	y0 = 170;
-	theta0 = 0;
+	x0 = 500;
+	y0 = 100;
+	theta0 = PI;
 	set_robot_position(x0, y0, theta0);
 
-	set_opponent_position(150, 375, PI/4);
+	set_opponent_position(358, 430, PI/4);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs

@@ -15,12 +15,12 @@ void init(double& width1, double& height1,
 
 	N_obs = 2;
 
-	x_obs[1] = 270; // pixels
-	y_obs[1] = 270; // pixels
+	x_obs[1] = 135; // pixels
+	y_obs[1] = 135; // pixels
 	size_obs[1] = 1;
 
-	x_obs[2] = 135; // pixels
-	y_obs[2] = 135; // pixels
+	x_obs[2] = 358; // pixels
+	y_obs[2] = 358; // pixels
 	size_obs[2] = 1;
 	// set robot model parameters ////////
 
@@ -1113,7 +1113,7 @@ int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, ima
 	}
 
 	for (int i = 1; i <= num_obs; i++) {
-		draw_circle(obstacle, 27, 70, ib[i], jb[i]);
+		draw_circle(obstacle, 27, 30, ib[i], jb[i]);
 
 		copy(obstacle, rgb);
 		view_rgb_image(rgb);
