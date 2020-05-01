@@ -113,7 +113,7 @@ void potential_field_planning(image& img, int* mini_destinationx,
 		d = sqrt(pow(gx - xp, 2) + pow(gy - yp, 2));
 
 		// Display the xp and yp on the image
-		draw_point_rgb(img, xp, yp, 0, 0, 255);
+		//draw_point_rgb(img, xp, yp, 0, 0, 255);
 
 		if (counter < 2) {
 			mini_destinationx[counter] = xp;

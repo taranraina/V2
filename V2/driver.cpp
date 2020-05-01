@@ -278,8 +278,8 @@ int main()
 
 
 		position_laser(pw_laser, theta, io, jo, ig, jg);
-
-		shoot_laser(io, jo, height, width, obstacle_laser, laser);
+		position_laser(pw_laser, theta, io, jo, ig, jg);
+		shoot_laser(pw_laser, theta, io, jo, ig, jg, height, width, obstacle_laser, laser);
 		escape_point(io, jo, ig, jg, height, width, obstacle_laser, ib, jb, ie, je);
 
 		set_inputs(pw_l, pw_r, pw_laser, laser,

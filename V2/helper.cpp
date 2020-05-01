@@ -432,7 +432,7 @@ int rotate_robot(int &pw_r, int &pw_l, double theta_current, double theta_desire
 
 	int pw_cw = 1450;
 	int pw_ccw = 1550;
-	int slope = 500;
+	int slope = 250;
 
 	//if the desired angle is in the first quadrant.
 	if (theta_desired >= 0 && theta_desired <= PI / 2)
@@ -595,7 +595,7 @@ void controller(int* mini_destinationx, int* mini_destinationy, double theta, in
 	double PI = atan(1) * 4;
 	double theta_expected = atan2(mini_destinationy[1] - mini_destinationy[0], mini_destinationx[1] - mini_destinationx[0]);
 
-	if (abs(theta - theta_expected) > 10 * (PI / 180)) // Tolerance
+	if (abs(theta - theta_expected) > 30 * (PI / 180)) // Tolerance
 	{
 		rotate_robot(pw_r, pw_l, theta, theta_expected);
 
@@ -823,7 +823,7 @@ bool isvalid_shot(int x, int y, image obstacle_laser, int width)
 	}
 }
 
-int shoot_laser(int & io, int & jo, int height, int width, image obstacle_laser, int &laser)
+int shoot_laser(int& pw_laser, double& thetar, int & io, int & jo, int& ig, int& jg, int height, int width, image obstacle_laser, int &laser)
 {
 	double x0, y0, theta, r;
 	int i, j;
@@ -867,6 +867,7 @@ int shoot_laser(int & io, int & jo, int height, int width, image obstacle_laser,
 	cout << "\nShot is valid, waiting on Count > 20. Current count : " << count;
 	if (count > 30 ) {
 		cout << "\nLaser fired!";
+		position_laser(pw_laser, thetar, io, jo, ig, jg);
 		laser = 1;
 	}
 	return 0;

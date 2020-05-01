@@ -41,7 +41,7 @@ bool are_robots_close(int x, int y, int xo, int yo);
 void convert_theta_positive(double& theta);
 int position_laser(int &pw_laser, double theta, int io, int jo, int ig, int jg);
 bool isvalid_shot(int x, int y, image obstacle_laser, int width);
-int shoot_laser(int &io, int &jo, int height, int width, image obstacle_laser, int &laser);
+int shoot_laser(int& pw_laser, double& theta, int &io, int &jo, int& ig, int& jg, int height, int width, image obstacle_laser, int &laser);
 int escape_point(int &io, int &jo, int &ig, int &jg, int height, int width, image obstacle_laser, int ib[10], int jb[10], int &ie, int &je);
 
 int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, 
