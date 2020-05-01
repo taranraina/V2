@@ -15,12 +15,12 @@ void init(double& width1, double& height1,
 
 	N_obs = 2;
 
-	x_obs[1] = 135; // pixels
-	y_obs[1] = 135; // pixels
+	x_obs[1] = 270; // pixels
+	y_obs[1] = 270; // pixels
 	size_obs[1] = 1;
 
-	x_obs[2] = 358; // pixels
-	y_obs[2] = 358; // pixels
+	x_obs[2] = 135; // pixels
+	y_obs[2] = 135; // pixels
 	size_obs[2] = 1;
 	// set robot model parameters ////////
 
@@ -449,7 +449,7 @@ int rotate_robot(int &pw_r, int &pw_l, double theta_current, double theta_desire
 			return 0;
 		}
 		//current angle is between on the third quadrant and the angle is less than the continous line made from the desired angle (theta_desired-PI).
-		else if (theta_current<0 && abs(theta_current) >= (PI - theta_desired))
+		else if (theta_current < 0 && abs(theta_current) >= (PI - theta_desired))
 		{
 			//rotate cw
 			cout << "\nCW";
@@ -488,7 +488,7 @@ int rotate_robot(int &pw_r, int &pw_l, double theta_current, double theta_desire
 			pw_l = pw_r;
 			return 0;
 		}
-		else if (theta_current<0 && abs(theta_current) >= (PI - theta_desired))
+		else if (theta_current < 0 && abs(theta_current) >= (PI - theta_desired))
 		{
 			//rotate cw
 			cout << "\nCW";
@@ -525,7 +525,7 @@ int rotate_robot(int &pw_r, int &pw_l, double theta_current, double theta_desire
 			return 0;
 		}
 
-		else if (theta_current>0 && theta_current>(PI + theta_desired))
+		else if (theta_current > 0 && theta_current > (PI + theta_desired))
 		{
 			//rotate ccw
 			cout << "\nCCW";
@@ -865,7 +865,7 @@ int shoot_laser(int & io, int & jo, int height, int width, image obstacle_laser,
 	}
 	count++;
 	cout << "\nShot is valid, waiting on Count > 20. Current count : " << count;
-	if (count > 15) {
+	if (count > 30 ) {
 		cout << "\nLaser fired!";
 		laser = 1;
 	}
@@ -922,8 +922,8 @@ int draw_circle(image grey, int rmin, int rmax, int io, int jo)
 			{
 				continue;
 			}
-			else{
-				k = x + y*width;
+			else {
+				k = x + y * width;
 
 				//cout << "\nx=" << x << "\ty=" << y;
 				//_getch();
@@ -948,7 +948,7 @@ int mirror_point(image grey, int xc, int yc, int x, int y, bool vertical)
 	width = grey.width;
 	height = grey.height;
 
-	size = width*height;
+	size = width * height;
 
 	if (xc<0 || xc>width || yc<0 || yc>height)
 	{
@@ -975,12 +975,12 @@ int mirror_point(image grey, int xc, int yc, int x, int y, bool vertical)
 			}
 			else
 			{
-				km = im + jm*width;
+				km = im + jm * width;
 				pg = grey.pdata + km;
 				*pg = 255;
 			}
 		}
-		else if (x<xc)
+		else if (x < xc)
 		{
 			im = xc + (xc - x);
 			jm = y;
@@ -991,7 +991,7 @@ int mirror_point(image grey, int xc, int yc, int x, int y, bool vertical)
 			}
 			else
 			{
-				km = im + jm*width;
+				km = im + jm * width;
 				pg = grey.pdata + km;
 				*pg = 255;
 			}
@@ -1012,12 +1012,12 @@ int mirror_point(image grey, int xc, int yc, int x, int y, bool vertical)
 			}
 			else
 			{
-				km = im + jm*width;
+				km = im + jm * width;
 				pg = grey.pdata + km;
 				*pg = 255;
 			}
 		}
-		else if (y<yc)
+		else if (y < yc)
 		{
 			im = x;
 			jm = yc - (yc - y);
@@ -1028,7 +1028,7 @@ int mirror_point(image grey, int xc, int yc, int x, int y, bool vertical)
 			}
 			else
 			{
-				km = im + jm*width;
+				km = im + jm * width;
 				pg = grey.pdata + km;
 				*pg = 255;
 			}
@@ -1087,8 +1087,8 @@ int escape_point(int & io, int & jo, int & ig, int & jg, int height, int width, 
 }
 
 
-int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, image labels, 
-	int& nlabels, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[], 
+int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, image labels,
+	int& nlabels, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[],
 	int thresh, int ib[3], int jb[3], int r_obstacles[3], int*& obstaclesx, int*& obstaclesy, int& num_obstacles)
 {
 	int io, jo;
@@ -1098,7 +1098,7 @@ int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, ima
 	int n;
 	height = rgb.height;
 	width = rgb.width;
-	
+
 	//find the obstacle course
 	find_obstacle(rgb, obstacle, thresh);
 	copy(obstacle, obstacle_laser);
@@ -1113,7 +1113,7 @@ int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, ima
 	}
 
 	for (int i = 1; i <= num_obs; i++) {
-		draw_circle(obstacle, 27, 30, ib[i], jb[i]);
+		draw_circle(obstacle, 27, 60, ib[i], jb[i]);
 
 		copy(obstacle, rgb);
 		view_rgb_image(rgb);
@@ -1130,7 +1130,7 @@ int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, ima
 
 int collision(int* R, int ir, int jr, int* io, int* jo, int threshold, int num_obstacles)
 {
-	
+
 
 	for (int i = 1; i <= num_obstacles; i++) {
 		double dist;
@@ -1316,7 +1316,7 @@ int binary_centroid(image grey, int ic[10], int jc[10], int*& obstaclesx, int*& 
 		num_obstacles += m;
 		m = 0;
 	}
-		
+
 	obstaclesx = new int[num_obstacles];
 	obstaclesy = new int[num_obstacles];
 

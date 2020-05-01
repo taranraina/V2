@@ -1,8 +1,8 @@
 #include "potential_field_planning.h"
 
-void calculate_potential_field(image& img, double& minx, 
+void calculate_potential_field(image& img, double& minx,
 	double& miny, double**& pmap, double gx, double gy,
-	double reso, double rr, int& xw, int& yw, 
+	double reso, double rr, int& xw, int& yw,
 	int r_obstacles[3], int* obstaclesx, int* obstaclesy, double*& repulsive, int size, int height, int width)
 {
 	const double PI = atan(1) * 4;
@@ -14,8 +14,8 @@ void calculate_potential_field(image& img, double& minx,
 	double maxy = *std::max_element(obstaclesy, obstaclesy + size) + AREA_WIDTH / 2.0;
 
 	// Determine the width and height of the new map
-	xw = int(round((maxx - minx) / reso));
-	yw = int(round((maxy - miny) / reso));
+	xw = int(round((640) / reso));
+	yw = int(round((480) / reso));
 
 	// Creating our pmap
 	pmap = new double*[xw];
@@ -61,7 +61,7 @@ void potential_field_planning(image& img, int* mini_destinationx,
 	double minx, miny;
 	int xw, yw;
 
-	calculate_potential_field(img, minx, miny, 
+	calculate_potential_field(img, minx, miny,
 		pmap, gx, gy,
 		reso, rr, xw, yw,
 		r_obstacles, obstaclesx, obstaclesy, repulsive, num_obstacles, height, width);
@@ -98,7 +98,7 @@ void potential_field_planning(image& img, int* mini_destinationx,
 				if (iny < 0) py = yw + iny;
 				p = pmap[px][py];
 			}
-			
+
 			if (minp > p) {
 				minp = p;
 				minix = inx;
@@ -178,7 +178,7 @@ double calc_repulsive_potential(double x, double y, int* ox, int* oy, int num_ob
 		// Determine the closest obstacle
 		for (int i = 0; i < num_obstacles; i++) {
 			double dist = sqrt(pow(x - ox[i], 2) + pow(y - oy[i], 2));
-			if (dmin >= dist){
+			if (dmin >= dist) {
 				dmin = dist;
 				minid = i;
 			}
@@ -196,7 +196,7 @@ double calc_repulsive_potential(double x, double y, int* ox, int* oy, int num_ob
 			return repulsive[idx];
 		}
 	}
-	else{
+	else {
 		return repulsive[idx];
 	}
 }

@@ -47,10 +47,10 @@ int main()
 	int num_obstacles = 0;
 	int ie, je; //escape points
 
-	init( width1,  height1,
-		 N_obs, D, Lx,
-		 Ly, Ax, Ay, alpha_max,
-		 x_obs, y_obs, size_obs);
+	init(width1, height1,
+		N_obs, D, Lx,
+		Ly, Ax, Ay, alpha_max,
+		x_obs, y_obs, size_obs);
 
 	cout << "\npress space key to begin program.";
 	pause();
@@ -77,12 +77,12 @@ int main()
 	//	fout << scientific;
 
 	// set robot initial position (pixels) and angle (rad)
-	x0 = 500;
-	y0 = 100;
-	theta0 = PI;
+	x0 = 470;
+	y0 = 170;
+	theta0 = 0;
 	set_robot_position(x0, y0, theta0);
 
-	set_opponent_position(358, 430, PI/4);
+	set_opponent_position(150, 375, PI / 4);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
@@ -140,7 +140,7 @@ int main()
 	allocate_image(obstacle_laser);
 
 	// allocate memory for the images
-	
+
 
 	// measure initial clock time
 	tc0 = high_resolution_time();
@@ -180,7 +180,7 @@ int main()
 		//int x, y;
 		double theta;
 		int flag = calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta, ig, jg, ir, jr);
-		
+
 		//int xo, yo;
 		double thetao;
 		calculate_opponent_position(xo, yo, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, thetao, io, jo);
@@ -196,13 +196,13 @@ int main()
 				jb[i] = 0;
 			}
 
-			create_obstacle_image(rgb, obstacles, obstacle_laser, 
+			create_obstacle_image(rgb, obstacles, obstacle_laser,
 				labels, n_obs, ic_c, jc_c, Ravg,
 				Gavg, Bavg, 50, ib, jb, r_obstacles, obstaclesx, obstaclesy, num_obstacles);
 			initialized = false;
 		}
 
-		if (counter%1 == 0) {
+		if (counter % 1 == 0) {
 			if (!collision(r_obstacles, ir, jr, ib, jb, 25, n_obs)) {
 				potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
 					y, xo, yo, 5, 50, r_obstacles, obstaclesx, obstaclesy, repulsive, num_obstacles, height, width);
@@ -262,7 +262,7 @@ int main()
 			}
 		}
 		counter++;
-			
+
 		// change the inputs to move the robot around
 		// or change some additional parameters (lighting, etc.)
 
@@ -276,7 +276,7 @@ int main()
 		// laser -- (0 - laser off, 1 - fire laser for 3 s)
 		// max_speed -- pixels/s for right and left wheels
 
-		
+
 		position_laser(pw_laser, theta, io, jo, ig, jg);
 
 		shoot_laser(io, jo, height, width, obstacle_laser, laser);
@@ -287,7 +287,7 @@ int main()
 			max_speed, opponent_max_speed);
 
 		set_opponent_inputs(pwo_l, pwo_r, 1500, 0, opponent_max_speed);
-		
+
 		view_rgb_image(rgb);
 
 		// don't need to simulate too fast
