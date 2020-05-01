@@ -202,16 +202,19 @@ int main()
 			initialized = false;
 		}
 
+		escape_point(io, jo, ig, jg, height, width, obstacle_laser, ib, jb, ie, je);
+		draw_point_rgb(rgb, ie, je, 255, 0, 0);
+
 		if (counter % 1 == 0) {
 			if (!collision(r_obstacles, ir, jr, ib, jb, 25, n_obs)) {
 				potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
-					y, xo, yo, 5, 50, r_obstacles, obstaclesx, obstaclesy, repulsive, num_obstacles, height, width);
+					y, ie, je, 5, 50, r_obstacles, obstaclesx, obstaclesy, repulsive, num_obstacles, height, width);
 
-				if (!are_robots_close(x, y, xo, yo))
+				if (!are_robots_close(x, y, ie, je))
 					controller(mini_destinationx, mini_destinationy, theta, pw_l, pw_r);
 				else {
 					// determine the theta between robot and opponent
-					double theta_expected = atan2(yo - y, xo - x);
+					double theta_expected = atan2(je - y, ie - x);
 
 					convert_theta_positive(theta_expected);
 					convert_theta_positive(theta);
@@ -277,10 +280,9 @@ int main()
 		// max_speed -- pixels/s for right and left wheels
 
 
+		/*position_laser(pw_laser, theta, io, jo, ig, jg);
 		position_laser(pw_laser, theta, io, jo, ig, jg);
-		position_laser(pw_laser, theta, io, jo, ig, jg);
-		shoot_laser(pw_laser, theta, io, jo, ig, jg, height, width, obstacle_laser, laser);
-		escape_point(io, jo, ig, jg, height, width, obstacle_laser, ib, jb, ie, je);
+		shoot_laser(pw_laser, theta, io, jo, ig, jg, height, width, obstacle_laser, laser);*/
 
 		set_inputs(pw_l, pw_r, pw_laser, laser,
 			light, light_gradient, light_dir, image_noise,

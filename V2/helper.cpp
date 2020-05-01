@@ -700,7 +700,7 @@ int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[
 
 bool are_robots_close(int x, int y, int xo, int yo)
 {
-	const double distance_threshold = 150;
+	const double distance_threshold = 5;
 
 	double distance = sqrt(pow(x - xo, 2) + pow(y - yo, 2));
 
@@ -1050,39 +1050,47 @@ int escape_point(int & io, int & jo, int & ig, int & jg, int height, int width, 
 	for (int i = 1; i < 10; i++) {
 		//		cout <<"++++++++++++++++++++++\ndistnace from obstacle " << i << " to robot centorid " <<sqrt((ig - ib[i])*(ig - ib[i]) + (jg - jb[i])*(jg - jb[i]));
 
-		if (i == 1) {
-			min = 1;
-			min_distance = sqrt((ig - ib[i])*(ig - ib[i]) + (jg - jb[i])*(jg - jb[i]));
-		}
-		else if (sqrt((ig - ib[i])*(ig - ib[i]) + (jg - jb[i])*(jg - jb[i])) < min_distance) {
-			min = i;
-			min_distance = sqrt((ig - ib[i])*(ig - ib[i]) + (jg - jb[i])*(jg - jb[i]));
+		if (ib[i] > 100 && ib[i] < 540 && jb[i] >100 && jb[i] < 380){
+			if (i == 1) {
+				min = 1;
+				min_distance = sqrt((ig - ib[i])*(ig - ib[i]) + (jg - jb[i])*(jg - jb[i]));
+			}
+			else if (sqrt((ig - ib[i])*(ig - ib[i]) + (jg - jb[i])*(jg - jb[i])) < min_distance) {
+				min = i;
+				min_distance = sqrt((ig - ib[i])*(ig - ib[i]) + (jg - jb[i])*(jg - jb[i]));
+			}
 		}
 	}
 
-	//cout << "-------------------------\nmin distance from our robot to obsatcle is " << min_distance;
+	if (min != 0) {
+
+		//cout << "-------------------------\nmin distance from our robot to obsatcle is " << min_distance;
 
 
-	theta = atan2(jb[min] - jo, ib[min] - io);
-	r = sqrt((io - ib[min])*(io - ib[min]) + (jo - jb[min])*(jo - jb[min]));
+		theta = atan2(jb[min] - jo, ib[min] - io);
+		r = sqrt((io - ib[min])*(io - ib[min]) + (jo - jb[min])*(jo - jb[min]));
 
 
 
-	i = (int)(io + (r + 100) * cos(theta));
-	j = (int)(jo + (r + 100) * sin(theta));
+		i = (int)(io + (r + 100) * cos(theta));
+		j = (int)(jo + (r + 100) * sin(theta));
 
 
-	if (i < 3) return 0;
-	if (i > width - 3) return 0;
-	if (j < 3) return 0;
-	if (j > height - 3) return 0;
+		if (i < 3) return 0;
+		if (i > width - 3) return 0;
+		if (j < 3) return 0;
+		if (j > height - 3) return 0;
 
-	ie = i;
-	je = j;
-	cout << "\n ie is " << ie;
-	cout << "\n je is " << je;
+		ie = i;
+		je = j;
+		cout << "\n ie is " << ie;
+		cout << "\n je is " << je;
 
-
+	}
+	else {
+		ie = 580;
+		je = 420;
+	}
 
 	return 0;
 }
