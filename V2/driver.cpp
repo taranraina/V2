@@ -156,7 +156,7 @@ int main()
 	int count = 0;
 
 	while (1) {
-
+		laser = 1;
 		// simulates the robots and acquires the image from simulation
 		acquire_image_sim(rgb);
 		copy(rgb, rgb0);

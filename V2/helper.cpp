@@ -855,14 +855,14 @@ int shoot_laser(int& pw_laser, double& thetar, int & io, int & jo, int& ig, int&
 
 		if (!isvalid_shot(i + 10, j + 10, obstacle_laser, width)) {
 			cout << "\nShot is not valid";
-			laser = 0;
+			//laser = 0;
 			count = 0;
 			return 0;
 		}
 
 		if (!isvalid_shot(i - 10, j - 10, obstacle_laser, width)) {
 			cout << "\nShot is not valid";
-			laser = 0;
+			//laser = 0;
 			count = 0;
 			return 0;
 		}
@@ -873,7 +873,7 @@ int shoot_laser(int& pw_laser, double& thetar, int & io, int & jo, int& ig, int&
 	if (count > 30 && pw_laser > 1050 && pw_laser < 1950 && current - previous < 15) {
 		cout << "\nLaser fired!";
 		position_laser(pw_laser, thetar, io, jo, ig, jg);
-		laser = 1;
+		//laser = 1;
 	}
 	return 0;
 }

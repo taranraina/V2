@@ -289,19 +289,19 @@ int acquire_image_sim(image &rgb)
 	tc = high_resolution_time() - tc0;
 
 	// freeze simulation if either robot or opponent laser is fired
-	if (laser_fired) {
-		Sleep(laser_duration_ms);
-		// adjust tc0 so the real-time simulation stops
-		tc0 = high_resolution_time() - tc;
-		laser_fired = 0; // turn off laser when done
-	}
+	//if (laser_fired) {
+	//	Sleep(laser_duration_ms);
+	//	// adjust tc0 so the real-time simulation stops
+	//	tc0 = high_resolution_time() - tc;
+	//	laser_fired = 0; // turn off laser when done
+	//}
 
-	if (laser_fired_o) {
-		Sleep(laser_duration_ms);
-		// adjust tc0 so the real-time simulation stops
-		tc0 = high_resolution_time() - tc;
-		laser_fired_o = 0; // turn off laser when done
-	}
+	//if (laser_fired_o) {
+	//	Sleep(laser_duration_ms);
+	//	// adjust tc0 so the real-time simulation stops
+	//	tc0 = high_resolution_time() - tc;
+	//	laser_fired_o = 0; // turn off laser when done
+	//}
 
 	// real-time simulation of robots
 	// -- simulate robots with time step dt until simulation time = clock time
@@ -976,7 +976,7 @@ int draw_laser(robot *P, image &rgb)
 	// robot theta + laser alpha
 	theta = P->x[1] + P->x[4];
 
-	for (r = 0; r<5000; r += dr) {
+	for (r = 0; r<100; r += dr) {
 
 		i = (int)(x0 + r*cos(theta));
 		j = (int)(y0 + r*sin(theta));
