@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <algorithm>
 #include "image_transfer5.h"
 #include "vision.h"
 #include "robot.h"
@@ -29,9 +31,16 @@ int position_laser(int &pw_laser, double theta, int io, int jo, int ig, int jg);
 bool isvalid_shot(int x, int y, image obstacle_laser, int width);
 int shoot_laser(int &io, int &jo, int height, int width, image obstacle_laser, int &laser);
 int escape_point(int &io, int &jo, int &ig, int &jg, int height, int width, image obstacle_laser, int ib[10], int jb[10], int &ie, int &je);
-int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, image labels, int nlabels, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[], int thresh, int ib[10], int jb[10]);
+
+int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, 
+	image labels, int nlabels, int ic[], int jc[], double Ravg[], 
+	double Gavg[], double Bavg[], int thresh, int ib[3], int jb[3], int r_obstacles[3],
+	int*& obstaclesx, int*& obstaclesy, int& num_obstacles);
+
 int find_obstacle(image rgb, image &obstacle, int thresh);
-int binary_centroid(image grey, int ic[10], int jc[10]);
+
+int binary_centroid(image grey, int ic[10], int jc[10], int*& obstaclesx, int*& obstaclesy, int& num_obstacles);
+
 int get_labels_inverted(image rgb, image grey1, image grey2, image label, int &nlabels, int thresh);
 bool is_obstacle(image grey, image label, int n);
 int move_opponent(int &pw_l, int &pw_r);

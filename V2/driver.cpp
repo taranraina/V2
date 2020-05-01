@@ -39,7 +39,11 @@ int main()
 	int nlabel, thresh1, thresh2;
 	double Ravg[20], Gavg[20], Bavg[20];
 	double tc, tc0; // clock time
-	static int ib[10], jb[10];
+	static int ib[3], jb[3];
+	int r_obstacles[3];
+	int* obstaclesx;
+	int* obstaclesy;
+	int num_obstacles = 0;
 	int ie, je; //escape points
 
 	init( width1,  height1,
@@ -180,10 +184,23 @@ int main()
 		int mini_destinationx[2];
 		int mini_destinationy[2];
 
-		if (counter%10 == 0) {
+		if (initialized)
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				ib[i] = 0;
+				jb[i] = 0;
+			}
+
+			create_obstacle_image(rgb, obstacles, obstacle_laser, 
+				labels, nlabel, ic_c, jc_c, Ravg,
+				Gavg, Bavg, 50, ib, jb, r_obstacles, obstaclesx, obstaclesy, num_obstacles);
+			initialized = false;
+		}
+
+		if (counter%5 == 0) {
 			potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
-				y, xo, yo, x_obs,
-				y_obs, N_obs, 5, 500);
+				y, xo, yo, 5, 500, r_obstacles, obstaclesx, obstaclesy, num_obstacles);
 		}
 		counter++;
 			
@@ -223,42 +240,9 @@ int main()
 			}
 		}
 		position_laser(pw_laser, theta, io, jo, ig, jg);
-		if (initialized)
-		{
-			for (int i = 0; i < 10; i++)
-			{
-				ib[i] = 0;
-				jb[i] = 0;
-			}
-			create_obstacle_image(rgb, obstacles, obstacle_laser, labels, nlabel, ic_c, jc_c, Ravg, Gavg, Bavg, 50, ib, jb);
-			initialized = false;
-
-			cout << endl << "ic_c[1]" << " " << ic_c[1] << " " << "jc_c[1]" << " " << jc_c[1] << endl;
-			cout << endl << "ic_c[2]" << " " << ic_c[2] << " " << "jc_c[2]" << " " << jc_c[2] << endl;
-			cout << endl << "ic_c[3]" << " " << ic_c[3] << " " << "jc_c[3]" << " " << jc_c[3] << endl;
-			cout << endl << "ic_c[4]" << " " << ic_c[4] << " " << "jc_c[4]" << " " << jc_c[4] << endl;
-			cout << endl << "ic_c[5]" << " " << ic_c[5] << " " << "jc_c[5]" << " " << jc_c[5] << endl;
-
-			cout << endl << "ib[1] " << ib[1] << " jb[1] " << jb[1] << endl;
-			cout << endl << "ib[2] " << ib[2] << " jb[2] " << jb[2] << endl;
-
-		}
-		/*cout << endl << "ic_c[1]" << ic_c[1] << "jc_c[1]" << jc_c[1] << endl;
-		cout << endl << "ic_c[2]" << ic_c[2] << "jc_c[2]" << jc_c[2] << endl;
-		cout << endl << "ic_c[3]" << ic_c[1] << "jc_c[3]" << jc_c[3] << endl;
-		cout << endl << "ic_c[4]" << ic_c[2] << "jc_c[4]" << jc_c[4] << endl;
-		cout << endl << "ic_c[5]" << ic_c[2] << "jc_c[5]" << jc_c[5] << endl;
-
-		cout << endl << "ib[1]" << ib[1] << "jb[1]" << jb[1] << endl;
-		cout << endl << "ib[2]" << ib[2] << "jb[2]" << jb[2] << endl;*/
-
-
-
 
 		shoot_laser(io, jo, height, width, obstacle_laser, laser);
 		escape_point(io, jo, ig, jg, height, width, obstacle_laser, ib, jb, ie, je);
-
-		//draw_point_rgb(rgb, ie, je, 255, 0, 0);
 
 		set_inputs(pw_l, pw_r, pw_laser, laser,
 			light, light_gradient, light_dir, image_noise,
@@ -278,6 +262,9 @@ int main()
 	deactivate_vision();
 
 	deactivate_simulation();
+
+	delete[] obstaclesx;
+	delete[] obstaclesy;
 
 	cout << "\ndone.\n";
 

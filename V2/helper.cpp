@@ -440,7 +440,7 @@ void controller(int* mini_destinationx, int* mini_destinationy, double theta, in
 			turn(-1 * max_turn_speed, pw_l, pw_r);
 	}
 	else {
-		int forward = 150;
+		int forward = 50;
 		pw_l = 1500 - forward;
 		pw_r = 1500 + forward;
 	}
@@ -756,7 +756,9 @@ int escape_point(int & io, int & jo, int & ig, int & jg, int height, int width, 
 }
 
 
-int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, image labels, int nlabels, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[], int thresh, int ib[10], int jb[10])
+int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, image labels, 
+	int nlabels, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[], 
+	int thresh, int ib[3], int jb[3], int r_obstacles[3], int*& obstaclesx, int*& obstaclesy, int& num_obstacles)
 {
 	int io, jo;
 	int height, width;
@@ -765,35 +767,22 @@ int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, ima
 	int n;
 	height = rgb.height;
 	width = rgb.width;
-
-	for (int i = 0; i < 10; i++)
-	{
-		ib[i] = 0;
-		jb[i] = 0;
-	}
-
+	
 	//find the obstacle course
 	find_obstacle(rgb, obstacle, thresh);
 	copy(obstacle, obstacle_laser);
-	binary_centroid(obstacle, ib, jb); //ib and jb contain the centroids of the obstacles
+	binary_centroid(obstacle, ib, jb, obstaclesx, obstaclesy, num_obstacles); //ib and jb contain the centroids of the obstacles
 
 	int num_obs = 0;
 
-	for (int i = 1; i < 10; i++) {
+	for (int i = 1; i < 3; i++) {
 		if (ib[i] != 0) num_obs++;
 		else break;
 	}
 
 	for (int i = 1; i <= num_obs; i++) {
-		int radius = get_radius(obstacle, ib[i], jb[i]);
+		r_obstacles[i] = get_radius(obstacle, ib[i], jb[i]);
 	}
-
-
-
-	//draw_circle(obstacle, 30, 90, ib[1], jb[1]);
-	//draw_circle(obstacle, 30, 90, ib[2], jb[2]);
-
-
 
 	return 0;
 }
@@ -892,7 +881,7 @@ int find_obstacle(image rgb, image &obstacle, int thresh)
 
 
 
-int binary_centroid(image grey, int ic[10], int jc[10])
+int binary_centroid(image grey, int ic[10], int jc[10], int*& obstaclesx, int*& obstaclesy, int& num_obstacles)
 {
 	//Find the centroid of a labeled image using a binary image (black & white).
 	//the input image should already be in binary.
@@ -935,6 +924,9 @@ int binary_centroid(image grey, int ic[10], int jc[10])
 
 	cout << "\nlabel=" << nlabel;
 
+	vector<int> ox;
+	vector<int> oy;
+
 	for (n = 1; n <= nlabel; n++)
 	{
 		for (k = 0; k < size; k++)
@@ -948,16 +940,26 @@ int binary_centroid(image grey, int ic[10], int jc[10])
 				i = k % width;
 				j = (k - i) / width;
 
+				ox.push_back(i);
+				oy.push_back(j);
+
 				m += rho;
 				ic[n] += i;
 				jc[n] += j;
-
 			}
 		}
 		ic[n] = ic[n] / m;
 		jc[n] = jc[n] / m;
+
+		num_obstacles += m;
 		m = 0;
 	}
+
+	obstaclesx = new int[num_obstacles];
+	obstaclesy = new int[num_obstacles];
+
+	std::copy(ox.begin(), ox.end(), obstaclesx);
+	std::copy(oy.begin(), oy.end(), obstaclesy);
 
 	free_image(label);
 
