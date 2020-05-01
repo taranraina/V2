@@ -43,6 +43,7 @@ int main()
 	int r_obstacles[3];
 	int* obstaclesx;
 	int* obstaclesy;
+	double* repulsive = nullptr;
 	int num_obstacles = 0;
 	int ie, je; //escape points
 
@@ -76,12 +77,12 @@ int main()
 	//	fout << scientific;
 
 	// set robot initial position (pixels) and angle (rad)
-	x0 = 500;
-	y0 = 100;
-	theta0 = PI;
+	x0 = 470;
+	y0 = 170;
+	theta0 = 0;
 	set_robot_position(x0, y0, theta0);
 
-	set_opponent_position(358, 430, 0);
+	set_opponent_position(150, 375, PI/4);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
@@ -97,6 +98,8 @@ int main()
 	light_gradient = 1.0;
 	light_dir = 1.0;
 	image_noise = 1.0;
+
+	int n_obs;
 
 	// set initial inputs
 	set_inputs(pw_l, pw_r, pw_laser, laser,
@@ -147,9 +150,10 @@ int main()
 	pwo_r = 1500;
 
 	int counter = 0;
-	int x, y, ig, jg;//ig,jg centroid of green marker
+	int x, y, ig, jg, ir, jr;//ig,jg centroid of green marker
 	int xo, yo, io, jo;//io,jo centroid of orange marker
 	bool initialized = true;
+	int count = 0;
 
 	while (1) {
 
@@ -175,7 +179,7 @@ int main()
 
 		//int x, y;
 		double theta;
-		calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta, ig, jg);
+		int flag = calculate_robot_position(x, y, ic_c, jc_c, Ravg, Gavg, Bavg, nlabel, theta, ig, jg, ir, jr);
 		
 		//int xo, yo;
 		double thetao;
@@ -193,14 +197,69 @@ int main()
 			}
 
 			create_obstacle_image(rgb, obstacles, obstacle_laser, 
-				labels, nlabel, ic_c, jc_c, Ravg,
+				labels, n_obs, ic_c, jc_c, Ravg,
 				Gavg, Bavg, 50, ib, jb, r_obstacles, obstaclesx, obstaclesy, num_obstacles);
 			initialized = false;
 		}
 
-		if (counter%5 == 0) {
-			potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
-				y, xo, yo, 5, 500, r_obstacles, obstaclesx, obstaclesy, num_obstacles);
+		if (counter%1 == 0) {
+			if (!collision(r_obstacles, ir, jr, ib, jb, 25, n_obs)) {
+				potential_field_planning(rgb, mini_destinationx, mini_destinationy, x,
+					y, xo, yo, 5, 50, r_obstacles, obstaclesx, obstaclesy, repulsive, num_obstacles, height, width);
+
+				if (!are_robots_close(x, y, xo, yo))
+					controller(mini_destinationx, mini_destinationy, theta, pw_l, pw_r);
+				else {
+					// determine the theta between robot and opponent
+					double theta_expected = atan2(yo - y, xo - x);
+
+					convert_theta_positive(theta_expected);
+					convert_theta_positive(theta);
+
+					if (abs(theta - theta_expected) > 7 * (PI / 180)) {
+						int max_turn_speed = 50;
+
+						if (theta - theta_expected < 0)
+							turn(max_turn_speed, pw_l, pw_r);
+						else
+							turn(-1 * max_turn_speed, pw_l, pw_r);
+					}
+					else {
+						pw_l = 1500;
+						pw_r = 1500;
+					}
+				}
+			}
+			else {
+				cout << "About to collide" << endl;
+				pw_l = 1250;
+				pw_r = 1750;
+			}
+
+			if (flag == 1 || count)
+			{
+				//move backward
+				count++;
+
+				if (count > 10)
+				{
+					count = 0;
+				}
+
+				pw_l = 1750;
+				pw_r = 1250;
+			}
+			else if (flag == 2 || count)
+			{
+				if (count > 10)
+				{
+					count = 0;
+				}
+
+				//move forward
+				pw_l = 1250;
+				pw_r = 1750;
+			}
 		}
 		counter++;
 			
@@ -217,28 +276,7 @@ int main()
 		// laser -- (0 - laser off, 1 - fire laser for 3 s)
 		// max_speed -- pixels/s for right and left wheels
 
-		if (!are_robots_close(x, y, xo, yo))
-			controller(mini_destinationx, mini_destinationy, theta, pw_l, pw_r);
-		else {
-			// determine the theta between robot and opponent
-			double theta_expected = atan2(yo - y, xo - x);
-
-			convert_theta_positive(theta_expected);
-			convert_theta_positive(theta);
-
-			if (abs(theta - theta_expected) > 7 * (PI / 180)) {
-				int max_turn_speed = 50;
-
-				if (theta - theta_expected < 0)
-					turn(max_turn_speed, pw_l, pw_r);
-				else
-					turn(-1 * max_turn_speed, pw_l, pw_r);
-			}
-			else {
-				pw_l = 1500;
-				pw_r = 1500;
-			}
-		}
+		
 		position_laser(pw_laser, theta, io, jo, ig, jg);
 
 		shoot_laser(io, jo, height, width, obstacle_laser, laser);
@@ -265,6 +303,9 @@ int main()
 
 	delete[] obstaclesx;
 	delete[] obstaclesy;
+
+	if (repulsive != nullptr)
+		delete[] repulsive;
 
 	cout << "\ndone.\n";
 

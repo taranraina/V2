@@ -15,12 +15,12 @@ void init(double& width1, double& height1,
 
 	N_obs = 2;
 
-	x_obs[1] = 423; // pixels
-	y_obs[1] = 178; // pixels
+	x_obs[1] = 270; // pixels
+	y_obs[1] = 270; // pixels
 	size_obs[1] = 1;
 
-	x_obs[2] = 231; // pixels
-	y_obs[2] = 383; // pixels
+	x_obs[2] = 135; // pixels
+	y_obs[2] = 135; // pixels
 	size_obs[2] = 1;
 	// set robot model parameters ////////
 
@@ -305,7 +305,9 @@ void init_image(image& img, int width, int height, int img_type)
 	img.height = height;
 }
 
-int calculate_robot_position(int &x, int &y, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[], int nlabels, double &theta, int &ig, int&jg)
+int calculate_robot_position(int &x, int &y, int ic[],
+	int jc[], double Ravg[], double Gavg[],
+	double Bavg[], int nlabels, double &theta, int &ig, int&jg, int& ir, int& jr)
 {
 	//robot is straight if the centroid of the green and red objects are in the horizontal plane]
 	//Assume that the only red and green color in the background is our robot.
@@ -316,12 +318,10 @@ int calculate_robot_position(int &x, int &y, int ic[], int jc[], double Ravg[], 
 	//the variable x and y represent the position of the centroid of the robot (located between our two targets)
 	//The angle theta is the orientation of the robot.
 
-	int nl, ir, jr, flag = 1;
+	int nl, flag = 1;
 	static int ir_p = 0, jr_p = 0, ig_p = 0, jg_p = 0;
 	int width = 640;
 	int height = 480;
-	ir = 0;
-	jr = 0;
 	ig = 0;
 	jg = 0;
 
@@ -422,25 +422,190 @@ void convert_theta_positive(double& theta)
 	}
 }
 
+int rotate_robot(int &pw_r, int &pw_l, double theta_current, double theta_desired)
+{
+	//this function sets the pwm to rotate the robot to the desired angle.
+	//don't worry about tolerance, already taken care of in the function where this is called.
+
+
+	//cout << "\ntheta_desired=" << theta_desired << "\ttheta_current=" << theta_current;
+
+	int pw_cw = 1450;
+	int pw_ccw = 1550;
+	int slope = 500;
+
+	//if the desired angle is in the first quadrant.
+	if (theta_desired >= 0 && theta_desired <= PI / 2)
+	{
+		//cout << "\ntheta_desired is in the first quadrant.";
+
+		//current angle is between between the second quadrant and the desired angle in the first quadrant (turn it cw)
+		if (theta_current > theta_desired && theta_current <= PI)
+		{
+			//rotate cw
+			cout << "\nCW";
+			pw_r = pw_cw - (theta_current - theta_desired)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		//current angle is between on the third quadrant and the angle is less than the continous line made from the desired angle (theta_desired-PI).
+		else if (theta_current<0 && abs(theta_current) >= (PI - theta_desired))
+		{
+			//rotate cw
+			cout << "\nCW";
+			pw_r = pw_cw - ((2 * PI + theta_current) - theta_desired)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		//current angle is on the first quadrant to the right of where the desired angle is
+		else if (theta_current >= 0 && theta_current < theta_desired)
+		{
+			//rotate ccw
+			cout << "\nCCW";
+			pw_r = pw_ccw + (theta_desired - theta_current)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		else if (theta_current < 0 && abs(theta_current) < (PI - theta_desired))
+		{
+			//rotate ccw
+			cout << "\nCCW";
+			pw_r = pw_ccw + (theta_desired - theta_current)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+	}
+	//second quadrant
+	else if (theta_desired > PI / 2 && theta_desired <= PI)
+	{
+		//cout << "\ntheta_desired is in the second quadrant.";
+
+		if (theta_current > theta_desired && theta_current <= PI)
+		{
+			//rotate cw
+			cout << "\nCW";
+			pw_r = pw_cw - (theta_current - theta_desired)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		else if (theta_current<0 && abs(theta_current) >= (PI - theta_desired))
+		{
+			//rotate cw
+			cout << "\nCW";
+			pw_r = pw_cw - ((2 * PI + theta_current) - theta_desired)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		else if (theta_current >= 0 && theta_current < theta_desired)
+		{
+			cout << "\nCCW";
+			pw_r = pw_ccw + (theta_desired - theta_current)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		else if (theta_current < 0 && abs(theta_current) <= (PI - theta_desired))
+		{
+			cout << "\nCCW";
+			pw_r = pw_ccw + (theta_desired - theta_current)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+	}
+	//third quadrant
+	else if (theta_desired >= -PI && theta_desired <= -PI / 2)
+	{
+		//cout << "\ntheta_desired is in the third quadrant.";
+
+		if (theta_current < theta_desired && theta_current > -PI)
+		{
+			//rotate ccw
+			cout << "\nCCW";
+			pw_r = pw_ccw - (theta_current - theta_desired)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+
+		else if (theta_current>0 && theta_current>(PI + theta_desired))
+		{
+			//rotate ccw
+			cout << "\nCCW";
+			pw_r = pw_ccw - ((theta_current - 2 * PI) - theta_desired)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		else if (theta_current >= 0 && theta_current < (PI + theta_desired))
+		{
+			cout << "\nCW";
+			pw_r = pw_cw - (-theta_desired + theta_current)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		else if (theta_current < 0 && (theta_current) >(theta_desired))
+		{
+			cout << "\nCW";
+			pw_r = pw_cw - (-theta_desired + theta_current)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+	}
+	//fourth quadrant
+	else if (theta_desired > -PI / 2 && theta_desired < 0)
+	{
+		//cout << "\ntheta_desired is in the fourth quadrant.";
+
+		if (theta_current < theta_desired && theta_current > -PI)
+		{
+			//rotate ccw
+			cout << "\nCCW";
+			pw_r = pw_ccw - (theta_current - theta_desired)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+
+		else if (theta_current > 0 && theta_current > (PI + theta_desired))
+		{
+			//rotate ccw
+			cout << "\nCCW";
+			pw_r = pw_ccw - ((theta_current - 2 * PI) - theta_desired)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		else if (theta_current >= 0 && theta_current < (PI + theta_desired))
+		{
+			cout << "\nCW";
+			pw_r = pw_cw - (-theta_desired + theta_current)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+		else if (theta_current < 0 && (theta_current) >(theta_desired))
+		{
+			cout << "\nCW";
+			pw_r = pw_cw - (-theta_desired + theta_current)*slope;
+			pw_l = pw_r;
+			return 0;
+		}
+
+	}
+
+	return 0;
+}
+
 void controller(int* mini_destinationx, int* mini_destinationy, double theta, int& pw_l, int& pw_r)
 {
 	double PI = atan(1) * 4;
 	double theta_expected = atan2(mini_destinationy[1] - mini_destinationy[0], mini_destinationx[1] - mini_destinationx[0]);
 
-	convert_theta_positive(theta);
-	convert_theta_positive(theta_expected);
-
 	if (abs(theta - theta_expected) > 10 * (PI / 180)) // Tolerance
 	{
-		int max_turn_speed = 50;
+		rotate_robot(pw_r, pw_l, theta, theta_expected);
 
-		if (theta - theta_expected < 0)
-			turn(max_turn_speed, pw_l, pw_r);
-		else
-			turn(-1 * max_turn_speed, pw_l, pw_r);
+		if (pw_r > 2000) pw_r = 2000;
+		if (pw_l > 2000) pw_l = 2000;
+		if (pw_r < 1000) pw_r = 1000;
+		if (pw_l < 1000) pw_l = 1000;
 	}
 	else {
-		int forward = 50;
+		int forward = 150;
 		pw_l = 1500 - forward;
 		pw_r = 1500 + forward;
 	}
@@ -535,7 +700,7 @@ int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[
 
 bool are_robots_close(int x, int y, int xo, int yo)
 {
-	const double distance_threshold = 200;
+	const double distance_threshold = 150;
 
 	double distance = sqrt(pow(x - xo, 2) + pow(y - yo, 2));
 
@@ -707,6 +872,172 @@ int shoot_laser(int & io, int & jo, int height, int width, image obstacle_laser,
 	return 0;
 }
 
+int draw_circle(image grey, int rmin, int rmax, int io, int jo)
+{
+
+	//this function draws a circle in a binary image.
+	int i, r, k;
+	double theta;
+	int width, height;
+	int x, y;
+	width = grey.width;
+	height = grey.height;
+
+	ibyte *pg;
+
+	/*
+	for (r = rmin; r < rmax; r++)
+	{
+	for (theta = -PI; theta < PI; theta += PI / 200)
+	{
+	x = int(r*cos_taylor(theta)) + io;
+	y = int(r*sin_taylor(theta)) + jo;
+
+	if (x > width || y > height || x < 0 || y < 0)
+	{
+	continue;
+	}
+	else{
+	k = x + y*width;
+
+	//cout << "\nx=" << x << "\ty=" << y;
+	//_getch();
+	pg = (grey.pdata + k);
+	*pg = 255;
+	}
+	}
+	}
+	*/
+
+	for (r = rmin; r <= rmax; r++)
+	{
+		for (theta = -PI / 2; theta <= PI / 2; theta += PI / 500)
+		{
+			//x = int(r*cos_taylor(theta)) + io;
+			//y = int(r*sin_taylor(theta)) + jo;
+			x = int(r*cos(theta)) + io;
+			y = int(r*sin(theta)) + jo;
+
+			if (x > width || y > height || x < 0 || y < 0)
+			{
+				continue;
+			}
+			else{
+				k = x + y*width;
+
+				//cout << "\nx=" << x << "\ty=" << y;
+				//_getch();
+				pg = (grey.pdata + k);
+				*pg = 255;
+			}
+
+			mirror_point(grey, io, jo, x, y, true);
+		}
+	}
+
+	return 0;
+}
+
+int mirror_point(image grey, int xc, int yc, int x, int y, bool vertical)
+{
+	int i, j, k;
+	int im, jm, km;
+	int size;
+	int width, height;
+
+	width = grey.width;
+	height = grey.height;
+
+	size = width*height;
+
+	if (xc<0 || xc>width || yc<0 || yc>height)
+	{
+		return 1;
+	}
+
+	ibyte *pg;
+
+	im = 0;
+	jm = 0;
+
+	if (vertical)
+	{
+		//mirror along a vertical plane
+		if (x > xc) //if the point located to the right of the mirror
+		{
+			//mirrored point will be located the same number of pixels away from the mirror, but in the opposite direction;
+			im = xc - (x - xc);
+			jm = y;
+
+			if (im<0 || im>width || jm<0 || jm>height)
+			{
+				return 1;
+			}
+			else
+			{
+				km = im + jm*width;
+				pg = grey.pdata + km;
+				*pg = 255;
+			}
+		}
+		else if (x<xc)
+		{
+			im = xc + (xc - x);
+			jm = y;
+
+			if (im<0 || im>width || jm<0 || jm>height)
+			{
+				return 1;
+			}
+			else
+			{
+				km = im + jm*width;
+				pg = grey.pdata + km;
+				*pg = 255;
+			}
+		}
+	}
+	else
+	{
+		//mirror along a horizontal plane
+		if (y > yc) //if the point located to the right of the mirror
+		{
+			//mirrored point will be located the same number of pixels away from the mirror, but in the opposite direction;
+			im = x;
+			jm = yc + (y - yc);
+
+			if (im<0 || im>width || jm<0 || jm>height)
+			{
+				return 1;
+			}
+			else
+			{
+				km = im + jm*width;
+				pg = grey.pdata + km;
+				*pg = 255;
+			}
+		}
+		else if (y<yc)
+		{
+			im = x;
+			jm = yc - (yc - y);
+
+			if (im<0 || im>width || jm<0 || jm>height)
+			{
+				return 1;
+			}
+			else
+			{
+				km = im + jm*width;
+				pg = grey.pdata + km;
+				*pg = 255;
+			}
+		}
+	}
+
+	return 0;
+}
+
 int escape_point(int & io, int & jo, int & ig, int & jg, int height, int width, image obstacle_laser, int ib[10], int jb[10], int &ie, int &je)
 {
 	int min = 0;
@@ -757,7 +1088,7 @@ int escape_point(int & io, int & jo, int & ig, int & jg, int height, int width, 
 
 
 int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, image labels, 
-	int nlabels, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[], 
+	int& nlabels, int ic[], int jc[], double Ravg[], double Gavg[], double Bavg[], 
 	int thresh, int ib[3], int jb[3], int r_obstacles[3], int*& obstaclesx, int*& obstaclesy, int& num_obstacles)
 {
 	int io, jo;
@@ -771,7 +1102,8 @@ int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, ima
 	//find the obstacle course
 	find_obstacle(rgb, obstacle, thresh);
 	copy(obstacle, obstacle_laser);
-	binary_centroid(obstacle, ib, jb, obstaclesx, obstaclesy, num_obstacles); //ib and jb contain the centroids of the obstacles
+
+	binary_centroid(obstacle, ib, jb, num_obstacles, nlabels); //ib and jb contain the centroids of the obstacles
 
 	int num_obs = 0;
 
@@ -781,7 +1113,36 @@ int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, ima
 	}
 
 	for (int i = 1; i <= num_obs; i++) {
+		draw_circle(obstacle, 27, 70, ib[i], jb[i]);
+
+		copy(obstacle, rgb);
+		view_rgb_image(rgb);
+	}
+
+	binary_centroid(obstacle, ib, jb, obstaclesx, obstaclesy, num_obstacles); //ib and jb contain the centroids of the obstacles
+
+	for (int i = 1; i <= num_obs; i++) {
 		r_obstacles[i] = get_radius(obstacle, ib[i], jb[i]);
+	}
+
+	return 0;
+}
+
+int collision(int* R, int ir, int jr, int* io, int* jo, int threshold, int num_obstacles)
+{
+	
+
+	for (int i = 1; i <= num_obstacles; i++) {
+		double dist;
+
+		dist = sqrt((io[i] - ir)*(io[i] - ir) + (jo[i] - jr)*(jo[i] - jr));
+
+		int r = R[i];
+
+		if (dist < (R[i] + threshold))
+		{
+			return 1;
+		}
 	}
 
 	return 0;
@@ -886,6 +1247,7 @@ int binary_centroid(image grey, int ic[10], int jc[10], int*& obstaclesx, int*& 
 	//Find the centroid of a labeled image using a binary image (black & white).
 	//the input image should already be in binary.
 
+	static bool init = true;
 	int i, j, k, n;
 	ibyte *pa;
 	i2byte *pl;
@@ -922,10 +1284,10 @@ int binary_centroid(image grey, int ic[10], int jc[10], int*& obstaclesx, int*& 
 	pa = grey.pdata;
 	pl = (i2byte *)label.pdata;
 
-	cout << "\nlabel=" << nlabel;
-
 	vector<int> ox;
 	vector<int> oy;
+
+	num_obstacles = 0;
 
 	for (n = 1; n <= nlabel; n++)
 	{
@@ -954,7 +1316,7 @@ int binary_centroid(image grey, int ic[10], int jc[10], int*& obstaclesx, int*& 
 		num_obstacles += m;
 		m = 0;
 	}
-
+		
 	obstaclesx = new int[num_obstacles];
 	obstaclesy = new int[num_obstacles];
 
@@ -962,6 +1324,81 @@ int binary_centroid(image grey, int ic[10], int jc[10], int*& obstaclesx, int*& 
 	std::copy(oy.begin(), oy.end(), obstaclesy);
 
 	free_image(label);
+
+	init = true;
+
+	return 0;
+}
+
+int binary_centroid(image grey, int ic[10], int jc[10], int& num_obstacles, int& nlabel)
+{
+	//Find the centroid of a labeled image using a binary image (black & white).
+	//the input image should already be in binary.
+
+	static bool init = true;
+	int i, j, k, n;
+	ibyte *pa;
+	i2byte *pl;
+	double m = 0.0;
+	double rho = 1.0;
+	int width, height, size;
+	image label;
+
+	width = grey.width;
+	height = grey.height;
+	size = width * height;
+
+	label.width = width;
+	label.height = height;
+	label.type = LABEL_IMAGE;
+
+	allocate_image(label);
+
+	if (width != label.width || height != label.height)
+	{
+		cout << "\nError, input label doesn't have the correct pixel dimensions.";
+		return 1;
+	}
+
+	if (LABEL_IMAGE != label.type)
+	{
+		cout << "\nError, input label isn't a LABEL_IMAGE type.";
+		return 1;
+	}
+
+	label_image(grey, label, nlabel);
+
+	pa = grey.pdata;
+	pl = (i2byte *)label.pdata;
+
+	for (n = 1; n <= nlabel; n++)
+	{
+		for (k = 0; k < size; k++)
+		{
+			//pa = grey.pdata + k * 3;
+			pa = grey.pdata + k;
+			pl = (i2byte *)label.pdata + k;
+
+			if (n == *pl)
+			{
+				i = k % width;
+				j = (k - i) / width;
+
+				m += rho;
+				ic[n] += i;
+				jc[n] += j;
+			}
+		}
+		ic[n] = ic[n] / m;
+		jc[n] = jc[n] / m;
+
+		num_obstacles += m;
+		m = 0;
+	}
+
+	free_image(label);
+
+	init = true;
 
 	return 0;
 }
