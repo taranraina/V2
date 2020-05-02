@@ -330,15 +330,15 @@ int calculate_robot_position(int &x, int &y, int ic[],
 	for (nl = 0; nl <= nlabels; nl++)
 	{
 		//cout << endl << Ravg[nl];
-		//Red target
-		if (Ravg[nl] > 0.6 && Gavg[nl] < 0.4 && Bavg[nl] < 0.4)
+		//Blue target
+		if (Ravg[nl] < 0.2 && Gavg[nl] > 0.5 && Bavg[nl] > 0.75)
 		{
 			ir = ic[nl];
 			jr = jc[nl];
 		}
 
-		//Green target
-		if (Ravg[nl] < 0.5 && Gavg[nl] > 0.6 && Bavg[nl] < 0.6)
+		//Orange target
+		if (Ravg[nl] > 0.8 && Gavg[nl] > 0.6 && Bavg[nl] < 0.5)
 		{
 			ig = ic[nl];
 			jg = jc[nl];
@@ -626,16 +626,16 @@ int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[
 
 	for (nl = 0; nl <= nlabels; nl++)
 	{
-		//Orange target
-		if (Ravg[nl] > 0.8 && Gavg[nl] > 0.6 && Bavg[nl] < 0.5)
+		//Green target
+		if (Ravg[nl] < 0.5 && Gavg[nl] > 0.6 && Bavg[nl] < 0.6)
 		{
 			ir = ic[nl];
 			jr = jc[nl];
 
 		}
 
-		//Blue target
-		if (Ravg[nl] < 0.2 && Gavg[nl] > 0.5 && Bavg[nl] > 0.75)
+		//Red target
+		if (Ravg[nl] > 0.6 && Gavg[nl] < 0.4 && Bavg[nl] < 0.4)
 		{
 			ig = ic[nl];
 			jg = jc[nl];
