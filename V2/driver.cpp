@@ -25,10 +25,18 @@ using namespace std;
 
 extern robot_system S1;
 const double PI = atan(1) * 4;
+int obstacle_xlocation = 250;
+int obstacle_ylocation = 250;
+double robot_xlocation = 470;
+double robot_ylocation = 170;
+double robot_theta0 = 0;
+double opponent_robot_xlocation = 135;
+double opponent_robot_ylocation = 370;
+double opponent_robot_theta0 = PI/4;
 
 int main()
 {
-	double x0, y0, theta0, max_speed, opponent_max_speed;
+	double  max_speed, opponent_max_speed;
 	int pw_l, pw_r, pwo_l, pwo_r, pw_laser, laser;
 	double light, light_gradient, light_dir, image_noise;
 	double width1, height1;
@@ -50,7 +58,7 @@ int main()
 	init(width1, height1,
 		N_obs, D, Lx,
 		Ly, Ax, Ay, alpha_max,
-		x_obs, y_obs, size_obs);
+		x_obs, y_obs, size_obs, obstacle_xlocation, obstacle_ylocation);
 
 	cout << "\npress space key to begin program.";
 	pause();
@@ -70,19 +78,17 @@ int main()
 	// the library, but it will be implemented soon.
 
 	activate_simulation(width1, height1, x_obs, y_obs, size_obs, N_obs,
-		"robot_A.bmp", "robot_B.bmp", "background.bmp", "obstacle.bmp", D, Lx, Ly, Ax, Ay, alpha_max, 2);
+		"robot_A.bmp", "robot_B.bmp", "background.bmp", "obstacle_125x.bmp", D, Lx, Ly, Ax, Ay, alpha_max, 2);
 
 	// open an output file if needed for testing or plotting
 	//	ofstream fout("sim1.txt");
 	//	fout << scientific;
 
 	// set robot initial position (pixels) and angle (rad)
-	x0 = 470;
-	y0 = 170;
-	theta0 = 0;
-	set_robot_position(x0, y0, theta0);
 
-	set_opponent_position(150, 375, PI / 4);
+	set_robot_position(robot_xlocation, robot_ylocation, robot_theta0);
+
+	set_opponent_position(opponent_robot_xlocation, opponent_robot_ylocation, opponent_robot_theta0);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
@@ -175,7 +181,7 @@ int main()
 		}
 		copy(rgb, rgb0);
 
-		move_opponent(pwo_l, pwo_r);
+		//move_opponent(pwo_l, pwo_r);
 
 		//int x, y;
 		double theta;
@@ -203,7 +209,7 @@ int main()
 		}
 
 		escape_point(io, jo, ig, jg, height, width, obstacle_laser, ib, jb, ie, je);
-		draw_point_rgb(rgb, ie, je, 255, 0, 0);
+		//draw_point_rgb(rgb, ie, je, 255, 0, 0);
 
 		if (counter % 1 == 0) {
 			if (!collision(r_obstacles, ir, jr, ib, jb, 25, n_obs)) {
@@ -214,23 +220,10 @@ int main()
 					controller(mini_destinationx, mini_destinationy, theta, pw_l, pw_r);
 				else {
 					// determine the theta between robot and opponent
-					double theta_expected = atan2(je - y, ie - x);
-
-					convert_theta_positive(theta_expected);
-					convert_theta_positive(theta);
-
-					if (abs(theta - theta_expected) > 7 * (PI / 180)) {
-						int max_turn_speed = 50;
-
-						if (theta - theta_expected < 0)
-							turn(max_turn_speed, pw_l, pw_r);
-						else
-							turn(-1 * max_turn_speed, pw_l, pw_r);
-					}
-					else {
+					
 						pw_l = 1500;
 						pw_r = 1500;
-					}
+					
 				}
 			}
 			else {

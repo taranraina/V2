@@ -8,20 +8,20 @@ void init(double& width1, double& height1,
 	int& N_obs, double&D, double&Lx,
 	double&Ly, double&Ax, double&Ay,
 	double&alpha_max, double* x_obs,
-	double* y_obs, double* size_obs)
+	double* y_obs, double* size_obs, int obstacle_xlocation, int obstacle_ylocation)
 {
 	width1 = 640;
 	height1 = 480;
 
-	N_obs = 2;
+	N_obs = 1;
 
-	x_obs[1] = 270; // pixels
-	y_obs[1] = 270; // pixels
+	x_obs[1] = obstacle_xlocation; // pixels
+	y_obs[1] = obstacle_ylocation; // pixels
 	size_obs[1] = 1;
 
-	x_obs[2] = 135; // pixels
-	y_obs[2] = 135; // pixels
-	size_obs[2] = 1;
+	//x_obs[2] = 250; // pixels
+	//y_obs[2] = 150; // pixels
+	//size_obs[2] = 1;
 	// set robot model parameters ////////
 
 	D = 121.0; // distance between front wheels (pixels)
@@ -324,6 +324,8 @@ int calculate_robot_position(int &x, int &y, int ic[],
 	int height = 480;
 	ig = 0;
 	jg = 0;
+	ir = 0;
+	jr = 0;
 
 	for (nl = 0; nl <= nlabels; nl++)
 	{
@@ -700,7 +702,7 @@ int calculate_opponent_position(int &x, int &y, int ic[], int jc[], double Ravg[
 
 bool are_robots_close(int x, int y, int xo, int yo)
 {
-	const double distance_threshold = 5;
+	const double distance_threshold = 20;
 
 	double distance = sqrt(pow(x - xo, 2) + pow(y - yo, 2));
 
@@ -1122,7 +1124,7 @@ int create_obstacle_image(image rgb, image &obstacle, image &obstacle_laser, ima
 	}
 
 	for (int i = 1; i <= num_obs; i++) {
-		draw_circle(obstacle, 27, 60, ib[i], jb[i]);
+		draw_circle(obstacle, 27, 75, ib[i], jb[i]);
 
 		copy(obstacle, rgb);
 		view_rgb_image(rgb);
@@ -1313,7 +1315,7 @@ int binary_centroid(image grey, int ic[10], int jc[10], int*& obstaclesx, int*& 
 
 				ox.push_back(i);
 				oy.push_back(j);
-
+				
 				m += rho;
 				ic[n] += i;
 				jc[n] += j;

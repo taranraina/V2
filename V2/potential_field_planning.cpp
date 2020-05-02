@@ -8,14 +8,19 @@ void calculate_potential_field(image& img, double& minx,
 	const double PI = atan(1) * 4;
 
 	// These determine the closest / furthest obstacles on the map (from origin)
-	minx = *std::min_element(obstaclesx, obstaclesx + size) - AREA_WIDTH / 2.0;
-	miny = *std::min_element(obstaclesy, obstaclesy + size) - AREA_WIDTH / 2.0;
-	double maxx = *std::max_element(obstaclesx, obstaclesx + size) + AREA_WIDTH / 2.0;
-	double maxy = *std::max_element(obstaclesy, obstaclesy + size) + AREA_WIDTH / 2.0;
+	//minx = *std::min_element(obstaclesx, obstaclesx + size) - AREA_WIDTH / 2.0;
+	//miny = *std::min_element(obstaclesy, obstaclesy + size) - AREA_WIDTH / 2.0;
+	//double maxx = *std::max_element(obstaclesx, obstaclesx + size) + AREA_WIDTH / 2.0;
+	//double maxy = *std::max_element(obstaclesy, obstaclesy + size) + AREA_WIDTH / 2.0;
+
+	minx = 0;
+	miny = 0;
+	double maxx = width;
+	double maxy = height;
 
 	// Determine the width and height of the new map
-	xw = int(round((640) / reso));
-	yw = int(round((480) / reso));
+	xw = int(round((maxx-minx) / reso));
+	yw = int(round((maxy-miny) / reso));
 
 	// Creating our pmap
 	pmap = new double*[xw];
@@ -54,7 +59,7 @@ void free_pmap(double** pmap, int xw, int yw) {
 
 void potential_field_planning(image& img, int* mini_destinationx,
 	int* mini_destinationy, double sx, double sy, double gx,
-	double gy, double reso, double rr, int r_obstacles[3],
+	double gy, double reso, double rr, int r_obstacles[2],
 	int* obstaclesx, int* obstaclesy, double*& repulsive, int num_obstacles, int width, int height)
 {
 	double** pmap = nullptr;
@@ -64,7 +69,7 @@ void potential_field_planning(image& img, int* mini_destinationx,
 	calculate_potential_field(img, minx, miny,
 		pmap, gx, gy,
 		reso, rr, xw, yw,
-		r_obstacles, obstaclesx, obstaclesy, repulsive, num_obstacles, height, width);
+		r_obstacles, obstaclesx, obstaclesy, repulsive, num_obstacles, width, height);
 
 	// search path
 	double d = sqrt(pow(sx - gx, 2) + pow(sy - gy, 2));
@@ -81,7 +86,7 @@ void potential_field_planning(image& img, int* mini_destinationx,
 	get_motion_model(motion);
 	int counter = 0;
 
-	while (d >= reso + 50) {
+	while (d >= reso) {
 		double minp = DBL_MAX;
 		int minix = -1, miniy = -1;
 
