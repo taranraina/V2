@@ -25,6 +25,15 @@ using namespace std;
 
 extern robot_system S1;
 const double PI = atan(1) * 4;
+int obstacle_xlocation = 300;
+int obstacle_ylocation = 300;
+double robot_xlocation = 500;
+double robot_ylocation = 350;
+double robot_theta0 = 0;
+double opponent_xlocation = 230;
+double opponent_ylocation = 170;
+double opponent_theta0 = PI/4;
+
 
 int main()
 {
@@ -46,11 +55,12 @@ int main()
 	double* repulsive = nullptr;
 	int num_obstacles = 0;
 	int ie, je; //escape points
+	int collisionflag;
 
 	init(width1, height1,
 		N_obs, D, Lx,
 		Ly, Ax, Ay, alpha_max,
-		x_obs, y_obs, size_obs);
+		x_obs, y_obs, size_obs, obstacle_xlocation, obstacle_ylocation);
 
 	cout << "\npress space key to begin program.";
 	pause();
@@ -70,19 +80,17 @@ int main()
 	// the library, but it will be implemented soon.
 
 	activate_simulation(width1, height1, x_obs, y_obs, size_obs, N_obs,
-		"robot_A.bmp", "robot_B.bmp", "background.bmp", "obstacle.bmp", D, Lx, Ly, Ax, Ay, alpha_max, 2);
+		"robot_A.bmp", "robot_B.bmp", "background.bmp", "obstacle_125x.bmp", D, Lx, Ly, Ax, Ay, alpha_max, 2);
 
 	// open an output file if needed for testing or plotting
 	//	ofstream fout("sim1.txt");
 	//	fout << scientific;
 
 	// set robot initial position (pixels) and angle (rad)
-	x0 = 470;
-	y0 = 170;
-	theta0 = 0;
-	set_robot_position(x0, y0, theta0);
+	
+	set_robot_position(robot_xlocation, robot_ylocation, robot_theta0);
 
-	set_opponent_position(150, 375, PI / 4);
+	set_opponent_position(opponent_xlocation, opponent_ylocation, opponent_theta0);
 	// set initial inputs / on-line adjustable parameters /////////
 
 	// inputs
@@ -279,7 +287,8 @@ int main()
 
 		position_laser(pw_laser, theta, io, jo, ig, jg);
 		position_laser(pw_laser, theta, io, jo, ig, jg);
-		shoot_laser(pw_laser, theta, io, jo, ig, jg, height, width, obstacle_laser, laser);
+		if (!collision(r_obstacles, ir, jr, ib, jb, 25, n_obs))
+			shoot_laser(pw_laser, theta, io, jo, ig, jg, height, width, obstacle_laser, laser);
 		escape_point(io, jo, ig, jg, height, width, obstacle_laser, ib, jb, ie, je);
 
 		set_inputs(pw_l, pw_r, pw_laser, laser,
